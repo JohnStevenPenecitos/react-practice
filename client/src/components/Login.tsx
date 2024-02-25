@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "./Auth";
 import { useNavigate } from "react-router-dom";
+import TitlePage from "./TitlePage";
 
 function Login() {
   const [user, setUser] = useState("");
@@ -15,6 +16,7 @@ function Login() {
   };
   return (
     <>
+    <TitlePage title="Login Page"/>
       <div>Login Page</div>
       <label>Username</label>
       <input
