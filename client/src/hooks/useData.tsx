@@ -1,9 +1,15 @@
 import axios from "axios";
-import { useQuery, UseQueryOptions } from "react-query";
+import {
+  useQuery,
+  UseQueryOptions,
+  useQueryClient,
+  useMutation,
+} from "react-query";
 
 interface dataItem {
   _id: string;
   name: string;
+  post_id: string;
 }
 
 interface MyError {
@@ -34,11 +40,26 @@ const useData = (
   return useQuery<dataItem[], MyError>("posts", fetchData, {
     onSuccess,
     onError,
-    select: (data: dataItem[]) => {
-      return data || [];
-    },
+    // select: (data: dataItem[]) => {
+    //   return data || [];
+    // },
     ...options,
   });
 };
+
+export const useAddDataPost = () => {
+  const queryClient = useQueryClient();
+
+  const addPostData = async ({ name }: { name: string }) => {
+    return await axios.post("/api/user/datainsert", { name });
+  };
+
+  return useMutation(addPostData, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("posts");
+    },
+  });
+};
+
 
 export default useData;

@@ -5,7 +5,7 @@ const SequenceSchema = new mongoose.Schema({
   sequence_value: { type: Number, default: 1 },
 });
 
-const SequenceModel = mongoose.model("sequences", SequenceSchema);
+const SequenceModel = mongoose.model("comm_sequences", SequenceSchema);
 
 async function getNextSequenceValue(sequenceName) {
   const sequenceDocument = await SequenceModel.findByIdAndUpdate(
@@ -17,21 +17,22 @@ async function getNextSequenceValue(sequenceName) {
   return sequenceDocument.sequence_value;
 }
 
-const PostSchema = new mongoose.Schema(
+const CommentSchema = new mongoose.Schema(
   {
-    post_id: { type: Number },
-    name: { type: String },
+    comment_id: { type: Number },
+    content: { type: String },
+    post: { type: mongoose.Schema.Types.ObjectId, ref: "posts" },
   },
   { timestamps: true }
 );
 
-PostSchema.pre("save", async function (next) {
-  if (!this.post_id) {
-    this.post_id = await getNextSequenceValue("post_id");
+CommentSchema.pre("save", async function (next) {
+  if (!this.comment_id) {
+    this.comment_id = await getNextSequenceValue("comment_id");
   }
   next();
 });
 
-const PostModel = mongoose.model("posts", PostSchema);
+const CommentModel = mongoose.model("comments", CommentSchema);
 
-module.exports = PostModel;
+module.exports = CommentModel;

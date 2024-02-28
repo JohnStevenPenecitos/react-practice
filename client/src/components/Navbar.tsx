@@ -25,7 +25,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <div className="bg-blue-300 h-24 flex items-center justify-between px-8">
+      <div className="bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 h-24 flex items-center justify-between px-8">
         <div> Welcome {auth.user}</div>
         <nav>
           {navigation.map((item) => (

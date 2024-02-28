@@ -26,7 +26,9 @@ const Products = () => {
         className="bg-slate-200 rounded-lg"
       ></input>
 
-      <nav className="bg-green-300  flex items-center justify-start px-8 gap-3">
+
+
+      <nav className="bg-green-200  flex items-center justify-start px-8 gap-3">
         {navigation.map((item) => (
           <NavLink
             key={item.name}
