@@ -2,7 +2,7 @@
 import Navbar from "./components/Navbar";
 import FooterSys from "./components/FooterSys";
 import { ReactNode } from "react";
-import Background from "./components/Background";
+// import Background from "./components/Background";
 
 interface Props {
   children: ReactNode;
