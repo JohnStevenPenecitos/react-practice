@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(cors(
   {
-    origin: ["my-react-app-sandy-six.vercel.app"],
+    origin: ["https://my-react-app-sandy-six.vercel.app"],
     methods: ["POST", "GET"],
     credentials: true
   }
