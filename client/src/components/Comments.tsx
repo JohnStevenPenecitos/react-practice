@@ -4,20 +4,23 @@ import { CommentItem, useCommentDetails } from "../hooks/usePostDetails";
 const Comments = () => {
   const { postId } = useParams<{ postId?: string }>();
 
-  const { data, isError, error } = useCommentDetails(postId || "", {
-    onSuccess: (fetchedData) => {
-      if (fetchedData && fetchedData.commentsData) {
-        console.log("Custom Success Comments", fetchedData.commentsData);
-      }
-    },
-    onError: (customError) => {
-      console.log("Custom Error", customError.message);
-    },
-  });
+  const { data, isError, error, isLoading, isFetching } = useCommentDetails(
+    postId || "",
+    {
+      onSuccess: (fetchedData) => {
+        if (fetchedData && fetchedData.commentsData) {
+          console.log("Custom Success Comments", fetchedData.commentsData);
+        }
+      },
+      onError: (customError) => {
+        console.log("Custom Error", customError.message);
+      },
+    }
+  );
 
-  //   if (isLoading || isFetching) {
-  //     return <div className="animate-pulse bg-gray-300 h-8 mb-2 rounded"></div>;
-  //   }
+  if (isLoading || isFetching) {
+    return <div className="animate-pulse bg-gray-300 h-8 mb-2 rounded"></div>;
+  }
 
   if (isError) {
     return <div>{error?.message}</div>;
