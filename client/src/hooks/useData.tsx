@@ -18,7 +18,9 @@ interface MyError {
 
 const fetchData = async () => {
   // return axios.get("/api/user/dataget").then((response) => response.data);
-  return axios.get("https://react-practice-zeta-rust.vercel.app/api/user/dataget").then((response) => response.data);
+  return axios
+    .get("https://react-practice-zeta-rust.vercel.app/api/user/dataget")
+    .then((response) => response.data);
 };
 
 const useData = (
@@ -45,6 +47,8 @@ const useData = (
     //   return data || [];
     // },
     ...options,
+    refetchOnWindowFocus: true,
+    staleTime: 10000,
   });
 };
 
@@ -54,7 +58,10 @@ export const useAddDataPost = () => {
   const addPostData = async ({ name }: { name: string }) => {
     // return await axios.post("/api/user/datainsert", { name });
 
-    return await axios.post("https://react-practice-zeta-rust.vercel.app/api/user/datainsert", { name });
+    return await axios.post(
+      "https://react-practice-zeta-rust.vercel.app/api/user/datainsert",
+      { name }
+    );
   };
 
   return useMutation(addPostData, {
@@ -77,6 +84,5 @@ export const useAddDataPost = () => {
 //     },
 //   });
 // };
-
 
 export default useData;
