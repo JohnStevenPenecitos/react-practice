@@ -26,6 +26,6 @@ app.listen(3000, () => {
 });
 
 
-app.use('https://react-practice-zeta-rust.vercel.app/api/user', postRouter);
+app.use('/api/user', postRouter);
 
 
