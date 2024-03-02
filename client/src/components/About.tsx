@@ -57,7 +57,7 @@ const About: React.FC = () => {
   };
 
   if (isLoading || isFetching) {
-    // return <div>Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   if (isError) {
