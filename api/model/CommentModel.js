@@ -21,7 +21,9 @@ const CommentSchema = new mongoose.Schema(
   {
     comment_id: { type: Number },
     content: { type: String },
-    post: { type: mongoose.Schema.Types.ObjectId, ref: "posts" },
+    // post: { type: mongoose.Schema.Types.ObjectId, ref: "posts" },
+    // post_id: {  type: mongoose.Schema.Types.ObjectId, ref: "posts" }
+    post_id: { type: Number }
   },
   { timestamps: true }
 );

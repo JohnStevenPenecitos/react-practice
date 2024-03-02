@@ -1,74 +1,31 @@
-import { useState } from "react";
+// import { useState } from "react";
 import TitlePage from "./TitlePage";
 import useData, { useAddDataPost } from "../hooks/useData";
-import { Link, Outlet } from "react-router-dom";
-import { Field, Form, Formik, FormikHelpers, FormikValues } from "formik";
+import { Link } from "react-router-dom";
+import { Field, Form, Formik, FormikHelpers } from "formik";
+import { useState } from "react";
+import Modal from "./Modal";
+import Button from "./Button";
 
 const About: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  // const [data, setData] = useState<dataItem[]>([]);
+  // const [name, setName] = useState<string>("");
+  const [alertVisible, setAlertVisibility] = useState(false);
+  const [selectedName, setSelectedName] = useState("");
+  const [updatedName, setUpdatedName] = useState("");
 
-  // const [isLoading, setIsLoading] = useState(true);
+  const handleEditClick = (name: string) => {
+    setSelectedName(name);
+    setUpdatedName(name);
+    setAlertVisibility(true);
+  };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []); // Effect runs once when the component mounts
-
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   axios
-  //     .post("/api/user/datainsert", { name })
-  //     .then((result) => {
-  //       console.log(result);
-  //       // After successful insertion, fetch updated data
-  //       // fetchData();
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await axios.get<dataItem[]>("/api/user/dataget");
-  //     setData(response.data);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // const fetchData = async () => D{
-  //   const response = await axios.get<dataItem[]>("/api/user/dataget");
-  //   return response.data;
-  // };
-
-  // const onSuccess = (data: dataItem[]) => {
-  //   console.log("Success", data);
-  // };
-
-  // const onError = (error: MyError) => {
-  //   console.log("Error", error);
-  // };
-
-  // const fetchData = async () => {
-  //   return axios.get("/api/user/dataget").then((response) => response.data);
-  // };
-
-  // const { isLoading, data, isError, error, isFetching, refetch } = useQuery<
-  //   dataItem[],
-  //   MyError
-  // >("posts", fetchData, {
-  //   onSuccess,
-  //   onError,
-  //   select: (data: dataItem[]) => {
-  //     return data || [];
-  //   },
-  // });
-
-  const { isLoading, data, isError, error, isFetching, refetch } = useData({
+  const handleUpdateName = () => {
+    // Add logic to update the name, e.g., make an API call
+    // For now, let's just update the state
+    setSelectedName(updatedName);
+    setAlertVisibility(false);
+  };
+  const { isLoading, data, isError, error, isFetching } = useData({
     onSuccess: () => {
       // console.log("Custom Success", data);
     },
@@ -76,32 +33,6 @@ const About: React.FC = () => {
       // console.log("Custom Error", error);
     },
   });
-
-  // const { mutate: addPost } = useAddDataPost();
-
-  // const handleSubmit = async (a: React.FormEvent<HTMLFormElement>) => {
-  //   a.preventDefault();
-  //   await axios.post("/api/user/datainsert", { name });
-  // };
-
-  // const handleSubmit = async (
-  //   values: { name: string },
-  //   { setSubmitting }: FormikHelpers<{ name: string }>
-  // ) => {
-  //   try {
-  //     const { name } = values;
-
-  //     await axios.post("/api/user/datainsert", { name });
-
-  //     // Handle success, e.g., show a success message
-  //     console.log("Form submitted successfully!");
-  //   } catch (error) {
-  //     // Handle error, e.g., show an error message
-  //     console.error("Error submitting form:", error);
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
 
   const { mutate: addPost } = useAddDataPost();
 
@@ -132,43 +63,10 @@ const About: React.FC = () => {
   if (isError) {
     return <div>{error?.message}</div>;
   }
-
-  // const handleFetchClick = () => {
-  //   refetch();
-  // };
-  // if (status === "loading") {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (status === "error") {
-  //   return <div>Error loading data</div>;
-  // }
-
   return (
     <>
       <TitlePage title="About Page" />
       {/* <Outlet /> */}
-      {/* <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
-        <label className="block mb-2 text-sm font-medium text-gray-900 ">
-          Name:
-        </label>
-        <input
-          type="text"
-          value={name}
-          onChange={(a) => setName(a.target.value)}
-          id="name"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder=""
-          required
-        />
-        <button
-          type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Submit
-        </button>
-      </form> */}
-
       <div className="max-w-sm mx-auto">
         <Formik initialValues={{ name: "" }} onSubmit={handleSubmit}>
           <Form>
@@ -189,23 +87,45 @@ const About: React.FC = () => {
             </button>
           </Form>
         </Formik>
+
+        {/* {alertVisible && (
+          <Modal onClose={() => setAlertVisibility(false)}>
+            <h1>{selectedName}</h1>
+          </Modal>
+        )} */}
+
+        {alertVisible && (
+          <Modal title="update" onClose={() => setAlertVisibility(false)}>
+            <h1>{selectedName}</h1>
+            <div className="bg-gray-200 flex items-center justify-center h-12">
+              <input
+                type="text"
+                value={updatedName}
+                onChange={(e) => setUpdatedName(e.target.value)}
+              />
+            </div>
+
+            <div className="flex justify-end p-2">
+              <Button color="blue" onClick={handleUpdateName}>
+                Update
+              </Button>
+            </div>
+          </Modal>
+        )}
+
         <div className="p-5">
           {data &&
             data.map((item) => (
               <div
                 key={item.post_id}
-                className="bg-red-200 border-2 border-blue-400 p-2 rounded-lg mb-3"
+                className="bg-red-200 border-2 border-blue-400 p-2 rounded-lg mb-3 flex justify-between"
               >
-                <Link to={`/app/about/${item.post_id}`}>{item.name}</Link>
+                <Link to={`/app/about/${item.post_id}`}>{item.name}</Link>{" "}
+                <Button color="red" onClick={() => handleEditClick(item.name)}>
+                  Edit
+                </Button>
               </div>
             ))}
-
-          {/* {data &&
-            data.map((item) => <div key={item._id}>{item.propertyName}</div>)} */}
-
-          {/* {data.map((name, index) => (
-            <div key={index}>{name}</div>
-          ))} */}
         </div>
       </div>
     </>

@@ -61,5 +61,19 @@ export const useAddDataPost = () => {
   });
 };
 
+// export const useAddDataComment = () => {
+//   const queryClient = useQueryClient();
+
+//   const addCommentData = async ({ content }: { content: string }) => {
+//     return await axios.post("/api/user/insert-comment", { content });
+//   };
+
+//   return useMutation(addCommentData, {
+//     onSuccess: () => {
+//       // queryClient.invalidateQueries("posts");
+//     },
+//   });
+// };
+
 
 export default useData;

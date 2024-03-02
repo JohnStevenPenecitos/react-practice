@@ -1,6 +1,6 @@
 const postRouter = require("./routes/post.route.js");
 
-const commentRouter = require("./routes/comment.route.js");
+// const commentRouter = require("./routes/comment.route.js");
 
 
 const express = require("express");
@@ -11,7 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect("mongodb://localhost:27017/posts");
+// mongoose.connect("mongodb://localhost:27017/posts");
+mongoose.connect("mongodb+srv://mydb:Cyclops1@myreactapp.yyq6azh.mongodb.net/");
+
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000!');

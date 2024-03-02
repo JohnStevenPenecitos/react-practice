@@ -15,7 +15,7 @@ function Button({ children, color, onClick }: Props) {
   const colorClass = colorVariants[color];
   return (
     <button
-      className={`p-2 w-32 flex items-center justify-center ${colorClass}`}
+      className={`p-2 flex items-center justify-center rounded-lg ${colorClass}`}
       onClick={onClick}
     >
       {children}
