@@ -17,8 +17,8 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/app/*" element={<Routers />} />
+          <Route path="https://my-react-app-sandy-six.vercel.app/" element={<Login />} />
+          <Route path="https://my-react-app-sandy-six.vercel.app/app/*" element={<Routers />} />
         </Routes>
         <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
       </QueryClientProvider>
