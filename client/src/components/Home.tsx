@@ -7,6 +7,7 @@ interface Props {
   title: string;
 }
 
+
 const Home = ({ title }: Props) => {
   const [alertVisible, setAlertVisibility] = useState(false);
   const [alertVisible1, setAlertVisibility1] = useState(false);
@@ -79,10 +80,9 @@ const Home = ({ title }: Props) => {
         JS Button
       </Button>
 
-      <Button color="blue" onClick={() => navigate('/about')}>
+      <Button color="blue" onClick={() => navigate("/about")}>
         Kaye Button
       </Button>
-
     </>
   );
 };

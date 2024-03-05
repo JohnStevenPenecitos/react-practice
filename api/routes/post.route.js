@@ -6,6 +6,7 @@ const {
   insertData,
   getPostData,
   getPostDataById,
+  updatePostName,
 } = require("../controllers/post.controller.js");
 
 const {
@@ -25,6 +26,9 @@ router.get("/test", test);
 router.post("/datainsert", insertData);
 
 router.get("/dataget", getPostData);
+
+router.put("/dataupdate/:postId", updatePostName);
+
 
 // router.get("/:postId", async (req, res, next) => {
 //   const postId = req.params.postId;

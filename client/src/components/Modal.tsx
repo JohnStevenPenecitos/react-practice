@@ -11,6 +11,7 @@ interface Props {
 const titles = {
   update: `Update Post`,
   delete: `Delete Post`,
+  add: `Add Post`,
 };
 
 function Modal({ children, onClose, title }: Props) {
@@ -37,8 +38,8 @@ function Modal({ children, onClose, title }: Props) {
                 onClick={onClose}
               />
             </div>
-
-            <span>{children}</span>
+           
+              <div>{children}</div>
           </div>
         </div>
       </div>

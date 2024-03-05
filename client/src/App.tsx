@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="app/*" element={<Routers />} />
         </Routes>
-        <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
       </QueryClientProvider>
     </AuthProvider>
     // <Layout>

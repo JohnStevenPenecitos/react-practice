@@ -9,13 +9,17 @@ import Users from "./Users";
 import UserDetails from "./UserDetails";
 import AdminDetails from "./AdminDetails";
 import PostDetails from "./PostDetails";
+// import Chat from "./Chat";
+import MobileChat from "./MobileChat";
 const Routers = () => {
   return (
     <Layout>
       <Routes>
+
         <Route index element={<Navigate to="/app/home" />} />
         <Route path="home" element={<Home title="Home Page" />} />
         <Route path="about" element={<About />} />
+        <Route path="messages" element={<MobileChat />} />
         <Route path="about/:postId" element={<PostDetails />} />
         <Route path="product" element={<Products />}>
           <Route index element={<Featured />} />

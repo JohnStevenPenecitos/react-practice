@@ -59,6 +59,16 @@ export default {
 - npm install --save @fortawesome/free-solid-svg-icons
 - npm install --save @fortawesome/react-fontawesome
 
+## Installation of Fucking Socket IO
+
+For Backend
+- npm install socket.io
+- cors must be front end url
+
+For Frontend
+- npm install socket.io-client
+- url must be backend
+
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
