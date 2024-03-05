@@ -136,4 +136,4 @@ app.listen(3000, () => {
 
 app.use("/api/user", postRouter);
 
-module.exports = io;
+// module.exports = io;
