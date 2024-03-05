@@ -16,14 +16,6 @@ app.use(
   })
 );
 
-// const server = http.createServer(app);
-// const io = socketIo(server, {
-//   cors: {
-//     origin: "http://localhost:5173", // Replace with your client's origin
-//     methods: ["GET", "POST"],
-//   },
-// });
-
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -35,6 +27,15 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+
+// const server = http.createServer(app);
+// const io = socketIo(server, {
+//   cors: {
+//     origin: "http://localhost:5173", // Replace with your client's origin
+//     methods: ["GET", "POST"],
+//   },
+// });
+
 // const io = socketIo(server);
 
 // io.on("connection", (socket) => {
@@ -121,7 +122,11 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3000, () => {
+// server.listen(3000, () => {
+//   console.log("Server is running on port 3000!");
+// });
+
+app.listen(3000, () => {
   console.log("Server is running on port 3000!");
 });
 
