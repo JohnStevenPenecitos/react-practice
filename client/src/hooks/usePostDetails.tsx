@@ -72,15 +72,15 @@ interface MyError {
 }
 
 const fetchPostData = async (postId: string) => {
-  // return axios.get(`/api/user/${postId}`).then((response) => response.data);
-  return axios.get(`https://react-practice-zeta-rust.vercel.app/api/user/${postId}`).then((response) => response.data);
+  return axios.get(`/api/user/${postId}`).then((response) => response.data);
+  // return axios.get(`https://react-practice-zeta-rust.vercel.app/api/user/${postId}`).then((response) => response.data);
 
 };
 
 const fetchCommentData = async (post_id: string) => {
   return axios
-    // .get(`/api/user/comment/${post_id}`)
-    .get(`https://react-practice-zeta-rust.vercel.app/api/user/comment/${post_id}`)
+    .get(`/api/user/comment/${post_id}`)
+    // .get(`https://react-practice-zeta-rust.vercel.app/api/user/comment/${post_id}`)
 
     .then((response) => response.data);
 };
@@ -197,8 +197,8 @@ export const useAddDataComment = () => {
     content: string;
     post_id: string;
   }) => {
-    // return await axios.post("/api/user/insert-comment", { content, post_id });
-    return await axios.post("https://react-practice-zeta-rust.vercel.app/api/user/insert-comment", { content, post_id });
+    return await axios.post("/api/user/insert-comment", { content, post_id });
+    // return await axios.post("https://react-practice-zeta-rust.vercel.app/api/user/insert-comment", { content, post_id });
 
   };
 

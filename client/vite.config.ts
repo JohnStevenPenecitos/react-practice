@@ -6,8 +6,8 @@ export default defineConfig({
   server:{
     proxy: {
       '/api': {
-        // target:'http://localhost:3000',
-        target:'https://react-practice-zeta-rust.vercel.app',
+        target:'http://localhost:3000',
+        // target:'https://react-practice-zeta-rust.vercel.app',
         secure: false,
       },
     },

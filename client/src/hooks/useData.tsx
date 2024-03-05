@@ -25,11 +25,11 @@ interface MyError {
 
 
 const fetchData = async () => {
-  // return axios.get("/api/user/dataget").then((response) => response.data);
+  return axios.get("/api/user/dataget").then((response) => response.data);
 
-  return axios
-    .get("https://react-practice-zeta-rust.vercel.app/api/user/dataget")
-    .then((response) => response.data);
+  // return axios
+  //   .get("https://react-practice-zeta-rust.vercel.app/api/user/dataget")
+  //   .then((response) => response.data);
 };
 
 const useData = (
@@ -193,16 +193,16 @@ export const useUpdatePostData = () => {
     postId: string;
   }) => {
     try {
-      // const response = await axios.put(`/api/user/dataupdate/${postId}`, {
-      //   name,
-      // });
+      const response = await axios.put(`/api/user/dataupdate/${postId}`, {
+        name,
+      });
 
-      const response = await axios.put(
-        `https://react-practice-zeta-rust.vercel.app/api/user/dataupdate/${postId}`,
-        {
-          name,
-        }
-      );
+      // const response = await axios.put(
+      //   `https://react-practice-zeta-rust.vercel.app/api/user/dataupdate/${postId}`,
+      //   {
+      //     name,
+      //   }
+      // );
 
       if (response.status === 200) {
         toast.success(response.data.message);
