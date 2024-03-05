@@ -10,7 +10,14 @@ const http = require("http");
 const { Server } = require("socket.io");
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://my-react-app-sandy-six.vercel.app"],
+    // origin: ["http://localhost:5173"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 
 // const server = http.createServer(app);
 // const io = socketIo(server, {
@@ -62,7 +69,7 @@ mongoose.connect("mongodb+srv://mydb:Cyclops1@myreactapp.yyq6azh.mongodb.net/");
 //   // Emit the "dataChanged" event every 5 seconds (adjust the interval as needed)
 //   const dataChangedInterval = setInterval(() => {
 //     io.emit("dataChanged");
-//   }, 5000); 
+//   }, 5000);
 
 //   socket.on("newPost", (data) => {
 //     console.log("Received new post:", data);
