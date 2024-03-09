@@ -6,7 +6,7 @@ import {
   useQueryClient,
   useMutation,
 } from "react-query";
-// import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 
 interface dataItem {
   _id: string;
@@ -19,7 +19,7 @@ interface MyError {
   message: string;
 }
 
-// const socket = io("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 // const socket = io("https://react-practice-zeta-rust.vercel.app");
 
@@ -32,38 +32,11 @@ const fetchData = async () => {
   //   .then((response) => response.data);
 };
 
-const useData = (
-  options?: UseQueryOptions<dataItem[], MyError>,
-  OnSuccess?: (data: dataItem[]) => void,
-  OnError?: (error: MyError) => void
-) => {
-  const onSuccess = (data: dataItem[]) => {
-    if (OnSuccess) {
-      OnSuccess(data);
-    }
-  };
-
-  const onError = (error: MyError) => {
-    if (OnError) {
-      OnError(error);
-    }
-  };
-
-  return useQuery<dataItem[], MyError>("posts", fetchData, {
-    onSuccess,
-    onError,
-    ...options,
-  });
-};
-
 // const useData = (
-//   // socket: Socket,
 //   options?: UseQueryOptions<dataItem[], MyError>,
 //   OnSuccess?: (data: dataItem[]) => void,
 //   OnError?: (error: MyError) => void
 // ) => {
-//   const queryClient = useQueryClient();
-
 //   const onSuccess = (data: dataItem[]) => {
 //     if (OnSuccess) {
 //       OnSuccess(data);
@@ -76,21 +49,48 @@ const useData = (
 //     }
 //   };
 
-//   const invalidateQueryOnSocketEvent = () => {
-//     queryClient.invalidateQueries("posts");
-//   };
-
-//   // Listen for the "dataChanged" event and invalidate the query
-//   socket.on("dataChanged", invalidateQueryOnSocketEvent);
-
-//   const queryOptions: UseQueryOptions<dataItem[], MyError> = {
+//   return useQuery<dataItem[], MyError>("posts", fetchData, {
 //     onSuccess,
 //     onError,
 //     ...options,
-//   };
-
-//   return useQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
+//   });
 // };
+
+const useData = (
+  // socket: Socket,
+  options?: UseQueryOptions<dataItem[], MyError>,
+  OnSuccess?: (data: dataItem[]) => void,
+  OnError?: (error: MyError) => void
+) => {
+  const queryClient = useQueryClient();
+
+  const onSuccess = (data: dataItem[]) => {
+    if (OnSuccess) {
+      OnSuccess(data);
+    }
+  };
+
+  const onError = (error: MyError) => {
+    if (OnError) {
+      OnError(error);
+    }
+  };
+
+  const invalidateQueryOnSocketEvent = () => {
+    queryClient.invalidateQueries("posts");
+  };
+
+  // Listen for the "dataChanged" event and invalidate the query
+  socket.on("dataChanged", invalidateQueryOnSocketEvent);
+
+  const queryOptions: UseQueryOptions<dataItem[], MyError> = {
+    onSuccess,
+    onError,
+    ...options,
+  };
+
+  return useQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
+};
 
 // export const useAddDataPost = () => {
 //   const queryClient = useQueryClient();
@@ -112,16 +112,16 @@ export const useAddDataPost = () => {
 
   const addPostData = async ({ name }: { name: string }) => {
     try {
-      // const response = await axios.post("/api/user/datainsert", { name });
+      const response = await axios.post("/api/user/datainsert", { name });
 
-      const response = await axios.post(
-        "https://react-practice-zeta-rust.vercel.app/api/user/datainsert",
-        { name }
-      );
+      // const response = await axios.post(
+      //   "https://react-practice-zeta-rust.vercel.app/api/user/datainsert",
+      //   { name }
+      // );
 
-      console.log("Response from server:", response.data);
+      // console.log("Response from server:", response.data);
 
-      // socket.emit("newPost", response.data);
+      socket.emit("newPost", response.data);
 
       queryClient.invalidateQueries("posts");
 
@@ -132,9 +132,9 @@ export const useAddDataPost = () => {
     }
   };
 
-  // socket.on("broadcastNewPost", () => {
-  //   queryClient.invalidateQueries("posts");
-  // });
+  socket.on("broadcastNewPost", () => {
+    queryClient.invalidateQueries("posts");
+  });
 
   return useMutation(addPostData);
 };
@@ -210,7 +210,7 @@ export const useUpdatePostData = () => {
         toast.error("Failed to update post data");
       }
 
-      // socket.emit("newPost", response.data);
+      socket.emit("newPost", response.data);
 
       // Invalidate the "posts" query
       queryClient.invalidateQueries("posts");
@@ -223,9 +223,9 @@ export const useUpdatePostData = () => {
     }
   };
 
-  // socket.on("broadcastNewPost", () => {
-  //   queryClient.invalidateQueries("posts");
-  // });
+  socket.on("broadcastNewPost", () => {
+    queryClient.invalidateQueries("posts");
+  });
 
   return useMutation(updatePostData);
 };

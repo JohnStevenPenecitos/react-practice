@@ -36,11 +36,11 @@ const Posts = () => {
   // });
 
   const { isLoading, data, isError, error } = useData({
-    onSuccess: (data) => {
-      console.log("Custom Success", data);
+    onSuccess: () => {
+      // console.log("Custom Success", data);
     },
-    onError: (error) => {
-      console.error("Custom Error", error);
+    onError: () => {
+      // console.error("Custom Error", error);
     },
   });
 
