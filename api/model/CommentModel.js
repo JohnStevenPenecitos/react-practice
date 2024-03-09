@@ -30,7 +30,7 @@ const CommentSchema = new mongoose.Schema(
 
 CommentSchema.pre("save", async function (next) {
   if (!this.comment_id) {
-    this.comment_id = await getNextSequenceValue("comment_ids");
+    this.comment_id = await getNextSequenceValue("comment_id");
   }
   next();
 });
