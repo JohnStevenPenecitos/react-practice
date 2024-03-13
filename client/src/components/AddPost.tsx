@@ -4,11 +4,18 @@ import { useAddDataPost } from "../hooks/useData";
 import { useState } from "react";
 import Modal from "./Modal";
 import Button from "./Button";
+import { useAuthContext } from "./Auth";
 
 function AddPost() {
   const [alertVisible, setAlertVisibility] = useState(false);
 
-  const { mutate: addPost } = useAddDataPost();
+  const { authUser } = useAuthContext();
+
+  // const { mutate: addPost } = useAddDataPost();
+
+  const { mutate: addPost } = useAddDataPost({
+    userId: authUser ? authUser._id : null,
+  });
 
   const handleSubmit = async (
     values: { name: string },
@@ -17,6 +24,8 @@ function AddPost() {
     try {
       // Pass values object directly
       addPost(values);
+
+      // const userId = authUser ? authUser._id : null;
 
       resetForm();
 
@@ -31,36 +40,41 @@ function AddPost() {
     }
   };
 
-  
   return (
     <>
-      <div className=" p-2">
-        <div className=" bg-gray-500 w-full flex  overflow-hidden p-2 rounded-xl gap-2">
-          <Image src="../images/KayeIcon.png" />
-          <button
-            className="rounded-full bg-gray-200 w-full text-left pl-4"
-            onClick={() => setAlertVisibility(true)}
-          >
-            What's on your mind?
-          </button>
+      <div className="p-2">
+        <div className="bg-gray-500 flex overflow-hidden p-2 rounded-xl gap-2">
+          {authUser ? (
+            <>
+              {authUser.profilePhoto && <Image src={authUser.profilePhoto} />}
+              <button
+                className="rounded-full bg-gray-200 text-left pl-4 w-full"
+                onClick={() => setAlertVisibility(true)}
+              >
+                What's on your mind, {authUser.firstName}?
+              </button>
+            </>
+          ) : (
+            <p>Welcome, Guest!</p>
+          )}
         </div>
       </div>
 
       {alertVisible && (
         <Modal title="add" onClose={() => setAlertVisibility(false)}>
-            <Formik initialValues={{ name: "" }} onSubmit={handleSubmit}>
-              <Form className="h-32 border-2 border-red-200 flex flex-col  justify-center p-2">
-                <Field
-                  type="textarea"
-                  id="name"
-                  name="name"
-                  className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                />
-                <div className="flex justify-end p-2">
-                  <Button color="red">Post!</Button>
-                </div>
-              </Form>
-            </Formik>
+          <Formik initialValues={{ name: "" }} onSubmit={handleSubmit}>
+            <Form className="h-32 border-2 border-red-200 flex flex-col  justify-center p-2">
+              <Field
+                type="textarea"
+                id="name"
+                name="name"
+                className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              />
+              <div className="flex justify-end p-2">
+                <Button color="red">Post!</Button>
+              </div>
+            </Form>
+          </Formik>
         </Modal>
       )}
     </>

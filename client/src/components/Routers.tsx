@@ -11,11 +11,11 @@ import AdminDetails from "./AdminDetails";
 import PostDetails from "./PostDetails";
 // import Chat from "./Chat";
 import MobileChat from "./MobileChat";
+// import SignUp from "./SignUp";
 const Routers = () => {
   return (
     <Layout>
       <Routes>
-
         <Route index element={<Navigate to="/app/home" />} />
         <Route path="home" element={<Home title="Home Page" />} />
         <Route path="about" element={<About />} />

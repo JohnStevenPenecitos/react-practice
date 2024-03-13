@@ -22,7 +22,7 @@ const Layout = ({ children }: Props) => {
             <Sidebar />
             <div className="overflow-hidden border-2 border-red-500 w-full  rounded-lg">
               {/* <BackgroundGradientAnimation> */}
-                <main className="overflow-auto max-h-[84vh] max-w-3xl mx-auto">
+                <main className="max-w-3xl mx-auto">
                   {children}
                 </main>
               {/* </BackgroundGradientAnimation> */}

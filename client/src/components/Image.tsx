@@ -5,7 +5,11 @@ interface Props {
 function Image({ src }: Props) {
   return (
     <>
-      <img src={src} alt="" className="h-12 rounded-full" />
+      <img
+        src={src}
+        alt=""
+        className="h-12 rounded-full flex-nowrap flex object-cover"
+      />
     </>
   );
 }

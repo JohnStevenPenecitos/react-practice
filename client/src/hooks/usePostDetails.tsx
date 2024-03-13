@@ -5,6 +5,8 @@ import {
   useQueryClient,
   useMutation,
 } from "react-query";
+import { io } from "socket.io-client";
+// import { useAuthContext } from "../components/Auth";
 
 // interface dataItem {
 //   _id: string;
@@ -54,34 +56,51 @@ import {
 //   );
 // };
 
-interface DataItem {
+export interface DataItem {
   _id: string;
   name: string;
-  post_id: string;
+  likes: string;
+  postedBy?: {
+    firstName: string;
+    lastName: string;
+    profilePhoto: string;
+  };
+  profilePhoto?: string;
 }
 
 export interface CommentItem {
   _id: string;
   content: string;
-  post_id: string;
-  comment_id: string;
+  createdAt: string;
+  commentBy?: {
+    firstName: string;
+    lastName: string;
+    profilePhoto: string;
+  };
+  profilePhoto?: string;
+}
+
+interface UseAddDataPostOptions {
+  userId: number | null;
 }
 
 interface MyError {
   message: string;
 }
 
+// const { authUser } = useAuthContext();
+
+// const userAuthId = authUser?._id;
+
+const socket = io("http://localhost:3000");
+
 const fetchPostData = async (postId: string) => {
   return axios.get(`/api/user/${postId}`).then((response) => response.data);
-  // return axios.get(`https://react-practice-zeta-rust.vercel.app/api/user/${postId}`).then((response) => response.data);
-
 };
 
 const fetchCommentData = async (post_id: string) => {
   return axios
     .get(`/api/user/comment/${post_id}`)
-    // .get(`https://react-practice-zeta-rust.vercel.app/api/user/comment/${post_id}`)
-
     .then((response) => response.data);
 };
 
@@ -96,6 +115,36 @@ interface UseCommentDetailsOptions {
 }
 
 //Post
+// const usePostDetails = (
+//   postId: string,
+//   options?: UseQueryOptions<{ postData: DataItem }, MyError> &
+//     UsePostDetailsOptions
+// ) => {
+//   const { onSuccess, onError } = options || {};
+
+//   return useQuery(
+//     ["posts", postId],
+//     async () => {
+//       const postData = await fetchPostData(postId);
+//       return { postData };
+//     },
+//     {
+//       refetchInterval: false,
+//       onSuccess: (data) => {
+//         if (onSuccess) {
+//           onSuccess(data);
+//         }
+//       },
+//       onError: (error: MyError) => {
+//         if (onError) {
+//           onError(error);
+//         }
+//       },
+//       refetchOnWindowFocus: false,
+//     }
+//   );
+// };
+
 const usePostDetails = (
   postId: string,
   options?: UseQueryOptions<{ postData: DataItem }, MyError> &
@@ -103,10 +152,17 @@ const usePostDetails = (
 ) => {
   const { onSuccess, onError } = options || {};
 
+  const queryClient = useQueryClient();
+
+  // Move the invalidation inside the useQuery callback
   return useQuery(
     ["posts", postId],
     async () => {
       const postData = await fetchPostData(postId);
+
+      // Invalidate queries here
+      queryClient.invalidateQueries("posts");
+
       return { postData };
     },
     {
@@ -121,10 +177,11 @@ const usePostDetails = (
           onError(error);
         }
       },
-      refetchOnWindowFocus: false, // Add this line to fix the type error
+      refetchOnWindowFocus: false,
     }
   );
 };
+
 //Comment
 // Adjust the return type of useCommentDetails to include commentsData
 // export const useCommentDetails = (
@@ -187,7 +244,27 @@ export const useCommentDetails = (
   );
 };
 
-export const useAddDataComment = () => {
+// export const useAddDataComment = ({ userId }: UseAddDataPostOptions) => {
+//   const queryClient = useQueryClient();
+
+//   const addCommentData = async ({
+//     content,
+//     post_id,
+//   }: {
+//     content: string;
+//     post_id: string;
+//   }) => {
+//     return await axios.post("/api/user/insert-comment", { content, post_id });
+//   };
+
+//   return useMutation(addCommentData, {
+//     onSuccess: () => {
+//       queryClient.invalidateQueries("comments");
+//     },
+//   });
+// };
+
+export const useAddDataComment = ({ userId }: UseAddDataPostOptions) => {
   const queryClient = useQueryClient();
 
   const addCommentData = async ({
@@ -197,16 +274,40 @@ export const useAddDataComment = () => {
     content: string;
     post_id: string;
   }) => {
-    return await axios.post("/api/user/insert-comment", { content, post_id });
-    // return await axios.post("https://react-practice-zeta-rust.vercel.app/api/user/insert-comment", { content, post_id });
+    try {
+      if (userId !== null) {
+        const response = await axios.post("/api/user/insert-comment", {
+          content,
+          post_id,
+          userId,
+        });
 
+        socket.emit("newComment", response.data);
+
+        // queryClient.invalidateQueries("comments");
+        // queryClient.invalidateQueries("posts");
+
+        console.log(userId);
+
+        return response.data;
+      } else {
+        console.error("No authenticated user found");
+        throw new Error("No authenticated user found");
+      }
+    } catch (error) {
+      console.error("Error while adding post:", error);
+      throw error;
+    }
   };
 
-  return useMutation(addCommentData, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("comments");
-    },
+  socket.on("broadcastComment", () => {
+    queryClient.invalidateQueries("comments");
+    queryClient.invalidateQueries("posts");
   });
+
+  const { mutate } = useMutation(addCommentData);
+
+  return { mutate };
 };
 
 export default usePostDetails;

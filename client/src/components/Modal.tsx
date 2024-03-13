@@ -12,6 +12,8 @@ const titles = {
   update: `Update Post`,
   delete: `Delete Post`,
   add: `Add Post`,
+  default: ``,
+
 };
 
 function Modal({ children, onClose, title }: Props) {

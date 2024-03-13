@@ -7,91 +7,59 @@ const {
   getPostData,
   getPostDataById,
   updatePostName,
+  getUserInfoByPostId,
+  addLike,
+  getPostLikeData,
 } = require("../controllers/post.controller.js");
 
 const {
   testComment,
   insertDataComment,
-  getCommentsByPostId,
+  getDataByPostId,
 } = require("../controllers/comment.controller.js");
+
+const {
+  userSignUp,
+  loginUser,
+  logout,
+} = require("../controllers/user.controller.js");
 
 const router = express.Router();
 
+//Testing Routes
 router.get("/test-comment", testComment);
-
-router.post("/insert-comment", insertDataComment);
 
 router.get("/test", test);
 
+//User Routes
+router.post("/signup", userSignUp);
+
+router.post("/login-user", loginUser);
+
+router.post("/logout", logout);
+
+//Post Routes
 router.post("/datainsert", insertData);
 
 router.get("/dataget", getPostData);
 
 router.put("/dataupdate/:postId", updatePostName);
 
+router.get("/:postId", getUserInfoByPostId);
 
-// router.get("/:postId", async (req, res, next) => {
-//   const postId = req.params.postId;
+router.put("/addlike/:id", addLike)
 
-//   try {
-//     const postData = await getPostDataById(postId);
-//     const commentData = await getCommentsByPostId(post_id);
+router.get("/likes/:postId", getPostLikeData);
 
-//     res.status(200).json(postData);
-//     res.status(200).json(commentData);
 
-//   } catch (error) {
-//     if (error.message === "Post not found") {
-//       return res.status(404).json({ message: error.message });
-//     }
-//     next(error);
-//   }
-// });
 
-// router.get("/:postId", async (req, res, next) => {
-//   const postId = req.params.postId;
 
-//   const post_id = req.params.post_id;
+//Comment Routes
+router.post("/insert-comment", insertDataComment);
 
-//   try {
-//     const postData = await getPostDataById(postId);
-//     const commentData = await getCommentsByPostId(post_id);
+router.get("/comment/:post_id", getDataByPostId);
 
-//     res.status(200).json({ postData, commentData });
-//   } catch (error) {
-//     if (error.message === "Post not found") {
-//       return res.status(404).json({ message: error.message });
-//     }
-//     next(error);
-//   }
-// });
 
-router.get("/:postId", async (req, res, next) => {
-  const postId = req.params.postId;
 
-  try {
-    const postData = await getPostDataById(postId);
-    res.status(200).json(postData);
-  } catch (error) {
-    if (error.message === "Post not found") {
-      return res.status(404).json({ message: error.message });
-    }
-    next(error);
-  }
-});
-
-router.get("/comment/:post_id", async (req, res, next) => {
-  const post_id = req.params.post_id;
-
-  try {
-    const commentData = await getCommentsByPostId(post_id);
-    res.status(200).json(commentData);
-  } catch (error) {
-    if (error.message === "Post not found") {
-      return res.status(404).json({ message: error.message });
-    }
-    next(error);
-  }
-});
 
 module.exports = router;

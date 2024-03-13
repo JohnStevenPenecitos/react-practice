@@ -8,61 +8,52 @@ import {
 } from "react-query";
 import { io } from "socket.io-client";
 
-interface dataItem {
+export interface dataItem {
   _id: string;
   name: string;
   post_id: string;
   createdAt: string;
+  likes?: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    profilePhoto: string;
+  }[];
+  comments: string;
+  postedBy?: {
+    firstName: string;
+    lastName: string;
+    profilePhoto: string;
+  };
+  profilePhoto?: string;
 }
 
 interface MyError {
   message: string;
+}
+interface UseAddDataPostOptions {
+  userId: number | null;
 }
 
 const socket = io("http://localhost:3000");
 
 // const socket = io("https://react-practice-zeta-rust.vercel.app");
 
-
 const fetchData = async () => {
-  return axios.get("/api/user/dataget").then((response) => response.data);
-
-  // return axios
-  //   .get("https://react-practice-zeta-rust.vercel.app/api/user/dataget")
-  //   .then((response) => response.data);
+  try {
+    const response = await axios.get("/api/user/dataget");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-// const useData = (
-//   options?: UseQueryOptions<dataItem[], MyError>,
-//   OnSuccess?: (data: dataItem[]) => void,
-//   OnError?: (error: MyError) => void
-// ) => {
-//   const onSuccess = (data: dataItem[]) => {
-//     if (OnSuccess) {
-//       OnSuccess(data);
-//     }
-//   };
-
-//   const onError = (error: MyError) => {
-//     if (OnError) {
-//       OnError(error);
-//     }
-//   };
-
-//   return useQuery<dataItem[], MyError>("posts", fetchData, {
-//     onSuccess,
-//     onError,
-//     ...options,
-//   });
-// };
-
 const useData = (
-  // socket: Socket,
   options?: UseQueryOptions<dataItem[], MyError>,
   OnSuccess?: (data: dataItem[]) => void,
   OnError?: (error: MyError) => void
 ) => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const onSuccess = (data: dataItem[]) => {
     if (OnSuccess) {
@@ -76,12 +67,13 @@ const useData = (
     }
   };
 
-  const invalidateQueryOnSocketEvent = () => {
-    queryClient.invalidateQueries("posts");
-  };
+  // queryClient.invalidateQueries("posts");
 
-  // Listen for the "dataChanged" event and invalidate the query
-  socket.on("dataChanged", invalidateQueryOnSocketEvent);
+  // const invalidateQueryOnSocketEvent = () => {
+  //   queryClient.invalidateQueries("posts");
+  // };
+
+  // socket.on("dataChanged", invalidateQueryOnSocketEvent);
 
   const queryOptions: UseQueryOptions<dataItem[], MyError> = {
     onSuccess,
@@ -107,25 +99,53 @@ const useData = (
 //   });
 // };
 
-export const useAddDataPost = () => {
+// export const useAddDataPost = () => {
+//   const queryClient = useQueryClient();
+
+//   const addPostData = async ({ name }: { name: string }) => {
+//     try {
+//       const response = await axios.post("/api/user/datainsert", { name });
+
+//       socket.emit("newPost", response.data);
+
+//       queryClient.invalidateQueries("posts");
+
+//       return response.data;
+//     } catch (error) {
+//       console.error("Error while adding post:", error);
+//       throw error;
+//     }
+//   };
+
+//   socket.on("broadcastNewPost", () => {
+//     queryClient.invalidateQueries("posts");
+//   });
+
+//   return useMutation(addPostData);
+// };
+
+export const useAddDataPost = ({ userId }: UseAddDataPostOptions) => {
   const queryClient = useQueryClient();
 
   const addPostData = async ({ name }: { name: string }) => {
     try {
-      const response = await axios.post("/api/user/datainsert", { name });
+      if (userId !== null) {
+        const response = await axios.post("/api/user/datainsert", {
+          name,
+          userId,
+        });
 
-      // const response = await axios.post(
-      //   "https://react-practice-zeta-rust.vercel.app/api/user/datainsert",
-      //   { name }
-      // );
+        socket.emit("newPost", response.data);
 
-      // console.log("Response from server:", response.data);
+        queryClient.invalidateQueries("posts");
 
-      socket.emit("newPost", response.data);
+        console.log(userId);
 
-      queryClient.invalidateQueries("posts");
-
-      return response.data;
+        return response.data;
+      } else {
+        console.error("No authenticated user found");
+        throw new Error("No authenticated user found");
+      }
     } catch (error) {
       console.error("Error while adding post:", error);
       throw error;
@@ -136,7 +156,9 @@ export const useAddDataPost = () => {
     queryClient.invalidateQueries("posts");
   });
 
-  return useMutation(addPostData);
+  const { mutate } = useMutation(addPostData);
+
+  return { mutate };
 };
 
 // queryClient.invalidateQueries("posts");
@@ -223,9 +245,9 @@ export const useUpdatePostData = () => {
     }
   };
 
-  socket.on("broadcastNewPost", () => {
-    queryClient.invalidateQueries("posts");
-  });
+  // socket.on("broadcastNewPost", () => {
+  //   queryClient.invalidateQueries("posts");
+  // });
 
   return useMutation(updatePostData);
 };

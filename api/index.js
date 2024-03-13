@@ -7,20 +7,20 @@ const http = require("http");
 // const { Server } = require("socket.io");
 const socketIo = require("socket.io");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 dotenv.config();
 
 const PORT = process.env.PORT || 3001;
 
-app.use(express.json());
+app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
+app.use(cookieParser());
 app.use(
-  cors()
-
-  //   {
-  //   // origin: ["https://my-react-app-sandy-six.vercel.app"],
-  //   origin: ["http://localhost:5173"],
-  //   methods: ["POST", "GET", "PUT", "DELETE"],
-  //   credentials: true,
-  // }
+  cors({
+    // origin: ["https://my-react-app-sandy-six.vercel.app"],
+    // origin: ["http://localhost:5173"],
+    // methods: ["POST", "GET", "PUT", "DELETE"],
+    // credentials: true,
+  })
 );
 
 const server = http.createServer(app);
@@ -34,44 +34,61 @@ const io = socketIo(server, {
 // mongoose.connect("mongodb://localhost:27017/posts", {});
 
 // mongoose.connect("mongodb://localhost:27017/posts");
-mongoose.connect(process.env.MONGO_DB_URI);
+mongoose.connect(process.env.MONGO_DB_URI_LOCAL);
 
-let lastDataUpdateTime = Date.now();
+// let lastDataUpdateTime = Date.now();
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   // Emit the "dataChanged" event only when there are actual changes
-  const emitDataChanged = () => {
-    const currentTime = Date.now();
+  // const emitDataChanged = () => {
+  //   const currentTime = Date.now();
 
-    // Simulate some condition that triggers a change (e.g., every 10 seconds)
-    if (currentTime - lastDataUpdateTime > 10000) {
-      lastDataUpdateTime = currentTime;
+  //   // Simulate some condition that triggers a change (e.g., every 10 seconds)
+  //   if (currentTime - lastDataUpdateTime > 10000) {
+  //     lastDataUpdateTime = currentTime;
 
-      // Emit the "dataChanged" event to all connected clients
-      io.emit("dataChanged");
-    }
-  };
+  //     // Emit the "dataChanged" event to all connected clients
+  //     io.emit("dataChanged");
+  //   }
+  // };
 
-  // Set up an interval to check for changes and emit the event
-  const dataChangedInterval = setInterval(() => {
-    emitDataChanged();
-  }, 5000); // 5 seconds in milliseconds
+  // const dataChangedInterval = setInterval(() => {
+  //   emitDataChanged();
+  // }, 1000); // 5 seconds in milliseconds
 
   socket.on("newPost", (data) => {
     console.log("Received new post:", data);
 
-    // Broadcast the new post to all connected clients
     io.emit("broadcastNewPost", data);
+  });
 
-    // Trigger an immediate check for changes and emit the event if needed
-    emitDataChanged();
+  socket.on("newComment", (data) => {
+    console.log("Received new comment:", data);
+
+    io.emit("broadcastComment", data);
+  });
+
+  socket.on("newLike", (data) => {
+    console.log("Received new like:", data);
+
+    io.emit("broadcastLike", data);
+
+    // emitDataChanged();
+  });
+
+  socket.on("newLike1", (data) => {
+    console.log("Received new like:", data);
+
+    io.emit("broadcastLike1", data);
+
+    // emitDataChanged();
   });
 
   // Clean up the interval when the socket disconnects
   socket.on("disconnect", () => {
-    clearInterval(dataChangedInterval);
+    // clearInterval(dataChangedInterval);
   });
 });
 

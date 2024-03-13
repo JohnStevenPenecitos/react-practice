@@ -1,7 +1,22 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import usePostDetails, { useAddDataComment } from "../hooks/usePostDetails";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import Comments from "./Comments";
+import { useAuthContext } from "./Auth";
+import Image from "./Image";
+import { formatDistanceToNow } from "date-fns";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowLeft,
+  faHeart as faHeartSolid,
+} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+
+import { faComment } from "@fortawesome/free-regular-svg-icons";
+import TitlePage from "./TitlePage";
+import axios from "axios";
+import { useQueryClient } from "react-query";
+import { io } from "socket.io-client";
 
 const PostDetails = () => {
   const { postId } = useParams<{ postId?: string }>();
@@ -10,34 +25,55 @@ const PostDetails = () => {
 
   // console.log(post_id);
 
-  // const { isLoading, data, isError, error, isFetching } = usePostDetails(
-  //   postId || "",
-  //   {
-  //     onSuccess: () => {
-  //       // console.log("Custom Success", data);
-  //     },
-  //     onError: () => {
-  //       console.log("Custom Error", error);
-  //     },
-  //   }
-  // );
+  const { authUser } = useAuthContext();
 
-  const { isLoading, data, isError, error } = usePostDetails(
-    postId || "",
-    {
-      onSuccess: (fetchedData) => {
-        // Check if data is available to avoid issues during initial loading
-        if (fetchedData && fetchedData.postData) {
-          console.log("Custom Success", fetchedData.postData);
-        }
-      },
-      onError: (customError) => {
-        console.log("Custom Error", customError.message);
-      },
+  const userAuthId = authUser?._id;
+
+  const userAuthIdPost = authUser?._id?.toString();
+
+  const queryClient = useQueryClient();
+
+  const socket = io("http://localhost:3000");
+
+  const handleLikeClick = async (postId: string) => {
+    try {
+      if (authUser?._id !== undefined) {
+        const response = await axios.put(`/api/user/addlike/${postId}`, {
+          userId: userAuthId,
+        });
+        console.log(response.data);
+
+        // queryClient.invalidateQueries("posts");
+
+        socket.emit("newLike1", response.data);
+
+        socket.on("broadcastLike1", () => {
+          // queryClient.invalidateQueries("comments");
+          queryClient.invalidateQueries("posts");
+        });
+      }
+    } catch (error) {
+      // Handle errors
+      console.error("Error adding like:", error);
     }
-  );
+  };
 
-  const { mutate: addComment } = useAddDataComment();
+  const { isLoading, data, isError, error } = usePostDetails(postId || "", {
+    onSuccess: (fetchedData) => {
+      if (fetchedData && fetchedData.postData) {
+        console.log("Custom Success", fetchedData.postData);
+        console.log("data:", data);
+      }
+    },
+    onError: (customError) => {
+      console.log("Custom Error", customError.message);
+    },
+  });
+
+  // const { mutate: addComment } = useAddDataComment();
+  const { mutate: addComment } = useAddDataComment({
+    userId: authUser ? authUser._id : null,
+  });
 
   const handleSubmitComment = async (
     values: { content: string; post_id: string },
@@ -72,37 +108,216 @@ const PostDetails = () => {
 
   return (
     <>
-      <div>
-        <div
-          key={`post_${data?.postData._id}`}
-          className="bg-red-200 border-2 border-blue-400 p-2 rounded-lg mb-3"
-        >
-          {data?.postData.name}
+      <div className="p-2">
+        <div className="mx-auto max-w-3xl  rounded-lg overflow-hidden relative z-10">
+          <div className="bg-gray-700 justify-center flex items-center h-10 text-white relative z-10">
+            {data && data.postData ? (
+              data.postData.userData && data.postData.userData.postedBy ? (
+                <>
+                  <div className="flex gap-2">
+                    <div className="font-bold">
+                      {`${data.postData.userData.postedBy.firstName}'s Post`}
+                    </div>
+                  </div>
+                  <TitlePage
+                    title={`${data.postData.userData.postedBy.firstName}'s Post`}
+                  />
+                </>
+              ) : (
+                <p>No user data available</p>
+              )
+            ) : (
+              <p>No data available</p>
+            )}
+
+            <div className=" w-full absolute flex justify-start items-start -z-10">
+              <Link to={`/app/about/`} className="p-2">
+                <FontAwesomeIcon
+                  className="rounded-full p-2 text-sm bg-gray-500 text-white"
+                  icon={faArrowLeft}
+                />
+              </Link>
+            </div>
+          </div>
+          <div className="p-2  max-h-[72vh] overflow-auto bg-amber-200">
+            <div>
+              {data && data.postData ? (
+                <div>
+                  {data.postData.userData &&
+                    data.postData.userData.postedBy && (
+                      <div className="flex gap-2">
+                        {data.postData.userData.postedBy.profilePhoto && (
+                          <Image
+                            src={data.postData.userData.postedBy.profilePhoto}
+                          />
+                        )}
+
+                        <div className="flex flex-col">
+                          <div className="font-bold">
+                            {`${data.postData.userData.postedBy.firstName} ${data.postData.userData.postedBy.lastName}`}
+                          </div>
+
+                          <span className="text-sm">
+                            {formatDistanceToNow(
+                              new Date(data.postData.userData.createdAt),
+                              {
+                                addSuffix: true,
+                              }
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                  {data.postData.userData && (
+                    <div className="p-2">{data.postData.userData.name}</div>
+                  )}
+
+                  <div className="flex justify-between">
+                    <div className="flex gap-1">
+                      {data.postData.userData.likes.length > 0 && (
+                        <>
+                          <FontAwesomeIcon
+                            className={`mt-1 rounded-full p-2 text-sm bg-gray-200 ${
+                              data.postData.userData.likes &&
+                              userAuthIdPost &&
+                              data.postData.userData.likes.includes(
+                                userAuthIdPost
+                              )
+                                ? "text-blue-500"
+                                : ""
+                            }`}
+                            icon={faHeartSolid}
+                          />
+
+                          <h1 className="flex justify-center items-center">
+                            {data.postData.userData.likes &&
+                            data.postData.userData.likes.length > 0
+                              ? data.postData.userData.likes.length
+                              : 0}
+                          </h1>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="flex gap-1 justify-center items-center">
+                      <h1>
+                        {/* {data.postData.commentsData &&
+                        data.postData.commentsData.length > 0
+                          ? data.postData.commentsData.length
+                          : 0} */}
+
+                        {data.postData.commentsData &&
+                          data.postData.commentsData.length > 0 && (
+                            <>
+                              <div className="flex gap-1 justify-center items-center p-2 hover:underline">
+                                <h1>{data.postData.commentsData.length}</h1>
+                                <span>
+                                  {data.postData.commentsData.length === 1
+                                    ? "comment"
+                                    : "comments"}
+                                </span>
+                              </div>
+                            </>
+                          )}
+                      </h1>
+                    </div>
+                  </div>
+
+                  <div className="my-2 border-y-[1px] border-gray-500">
+                    <div className="flex justify-center items-center p-1">
+                      <button
+                        className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center"
+                        onClick={() =>
+                          handleLikeClick(data.postData.userData._id)
+                        }
+                      >
+                        <div className="flex gap-2 p-1">
+                          <FontAwesomeIcon
+                            className={`rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center ${
+                              data.postData.userData.likes &&
+                              userAuthIdPost &&
+                              data.postData.userData.likes.includes(
+                                userAuthIdPost
+                              )
+                                ? "text-blue-500"
+                                : ""
+                            }`}
+                            icon={
+                              data.postData.userData.likes &&
+                              userAuthIdPost &&
+                              data.postData.userData.likes.includes(
+                                userAuthIdPost
+                              )
+                                ? faHeartSolid
+                                : faHeartRegular
+                            }
+                          />
+
+                          <span className="flex justify-center items-center">
+                            {data.postData.userData.likes &&
+                            userAuthIdPost &&
+                            data.postData.userData.likes.includes(
+                              userAuthIdPost
+                            )
+                              ? "Liked"
+                              : "Like"}
+                          </span>
+                        </div>
+                      </button>
+                      <button className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center">
+                        <div className="flex gap-2 p-1">
+                          <FontAwesomeIcon
+                            className="rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center"
+                            icon={faComment}
+                          />
+
+                          <span className="flex justify-center items-center">
+                            Comments
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p>No data available</p>
+              )}
+            </div>
+
+            <Comments />
+          </div>
+          <div className="bg-gray-700 p-2">
+            <Formik
+              initialValues={{ content: "", post_id: post_id || "" }}
+              onSubmit={handleSubmitComment}
+            >
+              <Form>
+                <div className="flex gap-[5px]">
+                  {authUser ? (
+                    <>
+                      <div className="flex-nowrap">
+                        {authUser.profilePhoto && (
+                          <Image src={authUser.profilePhoto} />
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <p>Welcome, Guest!</p>
+                  )}
+                  <Field
+                    type="text"
+                    id="content"
+                    name="content"
+                    placeholder="Write your comment..."
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded-full w-full"
+                  />
+                </div>
+              </Form>
+            </Formik>
+          </div>
         </div>
       </div>
-      <div className="bg-green-200 p-5">
-        <Formik
-          initialValues={{ content: "", post_id: post_id || "" }}
-          onSubmit={handleSubmitComment}
-        >
-          <Form>
-            <label htmlFor="comment">Comment:</label>
-            <Field
-              type="text"
-              id="content"
-              name="content"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            />
-            <button
-              type="submit"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Submit
-            </button>
-          </Form>
-        </Formik>
-      </div>
-      <Comments />
     </>
   );
 };
