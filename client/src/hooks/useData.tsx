@@ -1,10 +1,13 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import {
-  useQuery,
-  UseQueryOptions,
+  // useQuery,
+  // UseQueryOptions,
   useQueryClient,
   useMutation,
+  UseInfiniteQueryOptions,
+  useInfiniteQuery,
+  InfiniteData,
 } from "react-query";
 import { io } from "socket.io-client";
 
@@ -39,50 +42,167 @@ const socket = io("http://localhost:3000");
 
 // const socket = io("https://react-practice-zeta-rust.vercel.app");
 
-const fetchData = async () => {
+// const fetchData = async () => {
+//   try {
+//     const response = await axios.get("/api/user/dataget");
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+const fetchData = async ({ pageParam = 1 }) => {
   try {
-    const response = await axios.get("/api/user/dataget");
+    const response = await axios.get(
+      `/api/user/dataget?page=${pageParam}&limit=5`
+    );
     return response.data;
   } catch (error) {
+    // handle error
     throw error;
   }
 };
 
+// const useData = (
+//   options?: UseQueryOptions<dataItem[], MyError>,
+//   OnSuccess?: (data: dataItem[]) => void,
+//   OnError?: (error: MyError) => void
+// ) => {
+//   const onSuccess = (data: dataItem[]) => {
+//     if (OnSuccess) {
+//       OnSuccess(data);
+//     }
+//   };
+
+//   const onError = (error: MyError) => {
+//     if (OnError) {
+//       OnError(error);
+//     }
+//   };
+
+//   const queryOptions: UseQueryOptions<dataItem[], MyError> = {
+//     onSuccess,
+//     onError,
+//     ...options,
+//   };
+
+//   return useQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
+// };
+
+// const fetchData = async ({ pageParam = 1 }) => {
+//   const response = await axios.get(
+//     `/api/user/dataget?page=${pageParam}&limit=5`
+//   );
+//   const data = response.data;
+//   return { ...data, prevOffset: pageParam };
+// };
+
+// const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+//   queryKey: ["users"],
+//   queryFn: getUsers,
+//   getNextPageParam: (lastPage) => {
+//     if (lastPage.prevOffset + 10 > lastPage.articleCount) {
+//       return false;
+//     }
+//     return lastPage.prevOffset + 10;
+//   },
+// });
+
 const useData = (
-  options?: UseQueryOptions<dataItem[], MyError>,
-  OnSuccess?: (data: dataItem[]) => void,
-  OnError?: (error: MyError) => void
+  options?: UseInfiniteQueryOptions<dataItem[], MyError>,
+  onSuccess?: (data: InfiniteData<dataItem[]>) => void,
+  onError?: (error: MyError) => void
 ) => {
-  // const queryClient = useQueryClient();
+  const queryOptions: UseInfiniteQueryOptions<dataItem[], MyError> = {
+    ...options,
+    getNextPageParam: (lastPage, allPages) => {
+      console.log("All Pages:", allPages);
 
-  const onSuccess = (data: dataItem[]) => {
-    if (OnSuccess) {
-      OnSuccess(data);
-    }
-  };
+      // if (!lastPage || lastPage.length === 0) {
+      //   return undefined;
+      // }
 
-  const onError = (error: MyError) => {
-    if (OnError) {
-      OnError(error);
-    }
-  };
+      // // Calculate the next page number based on the length of allPages
+      // const nextPageNumber = allPages.length + 1;
 
-  // queryClient.invalidateQueries("posts");
+      // return nextPageNumber;
 
-  // const invalidateQueryOnSocketEvent = () => {
-  //   queryClient.invalidateQueries("posts");
-  // };
+      if (!lastPage || lastPage.length === 0) {
+        return undefined;
+      }
+    
+      // If the last page fetched has less than 5 entries, there's no more data to fetch
+      if (lastPage.length < 5) {
+        return undefined;
+      }
 
-  // socket.on("dataChanged", invalidateQueryOnSocketEvent);
+      const nextPageNumber = allPages.length + 1;
+    
+      // Otherwise, return the next page number
+      return nextPageNumber;
+    },
 
-  const queryOptions: UseQueryOptions<dataItem[], MyError> = {
     onSuccess,
     onError,
-    ...options,
   };
 
-  return useQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
+  const { data, isLoading, isError, error, hasNextPage, fetchNextPage } =
+    useInfiniteQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
+
+  const hasNextPageBoolean: boolean = hasNextPage || false;
+
+  return {
+    data,
+    isLoading,
+    isError,
+    error,
+    hasNextPage: hasNextPageBoolean,
+    fetchNextPage,
+  };
 };
+
+// const useData = (
+//   options?: UseInfiniteQueryOptions<dataItem[], MyError>,
+//   onSuccess?: (data: InfiniteData<dataItem[]>) => void,
+//   onError?: (error: MyError) => void
+// ) => {
+//   const queryOptions: UseInfiniteQueryOptions<dataItem[], MyError> = {
+//     ...options,
+//     getNextPageParam: (lastPage) => {
+//       if (!lastPage || lastPage.length === 0) {
+//         return undefined;
+//       }
+//       const nextPageNumber = lastPage.length + 1;
+
+//       return nextPageNumber;
+//     },
+
+//     onSuccess,
+//     onError,
+//   };
+
+//   const { data, isLoading, isError, error, hasNextPage, fetchNextPage } =
+//     useInfiniteQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
+
+//   const hasNextPageBoolean: boolean = hasNextPage || false;
+
+//   return {
+//     data,
+//     isLoading,
+//     isError,
+//     error,
+//     hasNextPage: hasNextPageBoolean,
+//     fetchNextPage,
+//   };
+// };
+
+// queryClient.invalidateQueries("posts");
+
+// const invalidateQueryOnSocketEvent = () => {
+//   queryClient.invalidateQueries("posts");
+// };
+
+// socket.on("dataChanged", invalidateQueryOnSocketEvent);
 
 // export const useAddDataPost = () => {
 //   const queryClient = useQueryClient();

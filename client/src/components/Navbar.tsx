@@ -76,7 +76,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 flex items-center px-5 justify-between relative">
+      <div className="bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 flex items-center px-5 justify-between relative z-20">
         <div className="flex  items-center gap-2">
           {authUser ? (
             <>

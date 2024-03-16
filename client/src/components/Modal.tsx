@@ -23,7 +23,7 @@ function Modal({ children, onClose, title }: Props) {
 
   return (
     <>
-      <div className="z-10 inset-0 fixed">
+      <div className="z-30 inset-0 fixed">
         <div className="flex items-center justify-center min-h-screen text-center">
           <div className="fixed inset-0 transition-opacity" aria-hidden="true">
             <div className="absolute inset-0 bg-black opacity-75"></div>

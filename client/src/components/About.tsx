@@ -5,10 +5,12 @@ import AddPost from "./AddPost";
 const About: React.FC = () => {
   return (
     <>
-      <TitlePage title="About Page" />
-      <div className="overflow-auto max-h-[87.8vh]">
+      <TitlePage title="Posts Page" />
+      <div className="overflow-hidden max-h-[87.7vh]">
         <AddPost />
-        <Posts />
+        <div className="w-full p-2">
+          <Posts />
+        </div>
       </div>
     </>
   );

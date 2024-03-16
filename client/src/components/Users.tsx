@@ -1,6 +1,10 @@
 // import { Outlet } from "react-router-dom";
 import TitlePage from "./TitlePage";
-import { TextRevealCard, TextRevealCardDescription, TextRevealCardTitle } from "./ui/text-reveal-card";
+import {
+  TextRevealCard,
+  TextRevealCardDescription,
+  TextRevealCardTitle,
+} from "./ui/text-reveal-card";
 
 const Users = () => {
   return (
@@ -17,10 +21,10 @@ const Users = () => {
         </p>
       </div> */}
 
-      <div className="flex items-center justify-center  rounded-2xl w-full -z-50 relative">
+      <div className="flex items-center justify-center bg-[#0E0E10] h-[40rem] rounded-2xl w-full">
         <TextRevealCard
           text="You know the business"
-          revealText="Yieee "
+          revealText="I know the chemistry "
         >
           <TextRevealCardTitle>
             Sometimes, you just need to see it.

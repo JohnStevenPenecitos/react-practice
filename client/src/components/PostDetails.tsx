@@ -1,5 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import usePostDetails, { useAddDataComment } from "../hooks/usePostDetails";
+import usePostDetails, {
+  Comment,
+  useAddDataComment,
+} from "../hooks/usePostDetails";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import Comments from "./Comments";
 import { useAuthContext } from "./Auth";
@@ -49,6 +52,28 @@ const PostDetails = () => {
 
         socket.on("broadcastLike1", () => {
           // queryClient.invalidateQueries("comments");
+          queryClient.invalidateQueries("posts");
+        });
+      }
+    } catch (error) {
+      // Handle errors
+      console.error("Error adding like:", error);
+    }
+  };
+
+  const handleRemoveLikeClick = async (postId: string) => {
+    try {
+      if (authUser?._id !== undefined) {
+        const response = await axios.put(`/api/user/removelike/${postId}`, {
+          userId: userAuthId,
+        });
+        console.log(response.data);
+        queryClient.invalidateQueries("posts");
+
+        socket.emit("removeLike1", response.data);
+
+        socket.on("broadcastRemoveLike1", () => {
+          queryClient.invalidateQueries("comments");
           queryClient.invalidateQueries("posts");
         });
       }
@@ -200,13 +225,8 @@ const PostDetails = () => {
                       )}
                     </div>
 
-                    <div className="flex gap-1 justify-center items-center">
-                      <h1>
-                        {/* {data.postData.commentsData &&
-                        data.postData.commentsData.length > 0
-                          ? data.postData.commentsData.length
-                          : 0} */}
-
+                    <div className="flex justify-center items-center">
+                      {/* <h1>
                         {data.postData.commentsData &&
                           data.postData.commentsData.length > 0 && (
                             <>
@@ -220,51 +240,162 @@ const PostDetails = () => {
                               </div>
                             </>
                           )}
+                      </h1> */}
+                      <h1>
+                        {data.postData.commentsData &&
+                          data.postData.commentsData &&
+                          data.postData.commentsData.length > 0 && (
+                            <>
+                              <div className="flex gap-1 justify-center items-center  hover:underline">
+                                <h1>{data.postData.commentsData.length}</h1>
+                                <span>
+                                  {data.postData.commentsData.length === 1
+                                    ? "comment"
+                                    : "comments"}
+                                </span>
+                              </div>
+                            </>
+                          )}
                       </h1>
+                      {/* <span className="h-[4px] w-[4px] rounded-full bg-gray-900 m-2 flex justify-center items-center"></span>
+                      <h1>
+                        {data.postData.commentsData &&
+                          data.postData.commentsData.length > 0 && (
+                            <>
+                              <div className="flex gap-1 justify-center items-center hover:underline">
+                                <h1>
+                                  {data.postData.commentsData.reduce(
+                                    (totalReplies: number, comment: Comment) =>
+                                      totalReplies + comment.comments.length,
+                                    0
+                                  )}
+                                </h1>
+                                <span>
+                                  {data.postData.commentsData.reduce(
+                                    (totalReplies: number, comment: Comment) =>
+                                      totalReplies + comment.comments.length,
+                                    0
+                                  ) === 1
+                                    ? "reply"
+                                    : "replies"}
+                                </span>
+                              </div>
+                            </>
+                          )}
+                      </h1> */}
+                      {data.postData.commentsData &&
+                        data.postData.commentsData.length > 0 && (
+                          <>
+                            {data.postData.commentsData.reduce(
+                              (totalReplies: number, comment: Comment) =>
+                                totalReplies + comment.comments.length,
+                              0
+                            ) > 0 && (
+                              <>
+                                <span className="h-[4px] w-[4px] rounded-full bg-gray-900 m-2 flex justify-center items-center"></span>
+                                <div className="flex gap-1 justify-center items-center hover:underline">
+                                  <h1>
+                                    {data.postData.commentsData.reduce(
+                                      (
+                                        totalReplies: number,
+                                        comment: Comment
+                                      ) =>
+                                        totalReplies + comment.comments.length,
+                                      0
+                                    )}
+                                  </h1>
+                                  <span>
+                                    {data.postData.commentsData.reduce(
+                                      (
+                                        totalReplies: number,
+                                        comment: Comment
+                                      ) =>
+                                        totalReplies + comment.comments.length,
+                                      0
+                                    ) === 1
+                                      ? "reply"
+                                      : "replies"}
+                                  </span>
+                                </div>
+                              </>
+                            )}
+                          </>
+                        )}
                     </div>
                   </div>
 
                   <div className="my-2 border-y-[1px] border-gray-500">
                     <div className="flex justify-center items-center p-1">
-                      <button
-                        className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center"
-                        onClick={() =>
-                          handleLikeClick(data.postData.userData._id)
-                        }
-                      >
-                        <div className="flex gap-2 p-1">
-                          <FontAwesomeIcon
-                            className={`rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center ${
-                              data.postData.userData.likes &&
-                              userAuthIdPost &&
-                              data.postData.userData.likes.includes(
-                                userAuthIdPost
-                              )
-                                ? "text-blue-500"
-                                : ""
-                            }`}
-                            icon={
-                              data.postData.userData.likes &&
-                              userAuthIdPost &&
-                              data.postData.userData.likes.includes(
-                                userAuthIdPost
-                              )
-                                ? faHeartSolid
-                                : faHeartRegular
-                            }
-                          />
+                      {data.postData.userData.likes &&
+                      userAuthIdPost &&
+                      data.postData.userData.likes.includes(userAuthIdPost) ? (
+                        <button
+                          className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center"
+                          onClick={() =>
+                            handleRemoveLikeClick(data.postData.userData._id)
+                          }
+                        >
+                          <div className="flex gap-2 p-1">
+                            <FontAwesomeIcon
+                              className={`rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center ${
+                                data.postData.userData.likes &&
+                                userAuthIdPost &&
+                                data.postData.userData.likes.includes(
+                                  userAuthIdPost
+                                )
+                                  ? "text-blue-500"
+                                  : ""
+                              }`}
+                              icon={
+                                data.postData.userData.likes &&
+                                userAuthIdPost &&
+                                data.postData.userData.likes.includes(
+                                  userAuthIdPost
+                                )
+                                  ? faHeartSolid
+                                  : faHeartRegular
+                              }
+                            />
+                            <span className="flex justify-center items-center">
+                              Liked
+                            </span>
+                          </div>
+                        </button>
+                      ) : (
+                        <button
+                          className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center"
+                          onClick={() =>
+                            handleLikeClick(data.postData.userData._id)
+                          }
+                        >
+                          <div className="flex gap-2 p-1">
+                            <FontAwesomeIcon
+                              className={`rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center ${
+                                data.postData.userData.likes &&
+                                userAuthIdPost &&
+                                data.postData.userData.likes.includes(
+                                  userAuthIdPost
+                                )
+                                  ? "text-blue-500"
+                                  : ""
+                              }`}
+                              icon={
+                                data.postData.userData.likes &&
+                                userAuthIdPost &&
+                                data.postData.userData.likes.includes(
+                                  userAuthIdPost
+                                )
+                                  ? faHeartSolid
+                                  : faHeartRegular
+                              }
+                            />
+                            <span className="flex justify-center items-center">
+                              Like
+                            </span>
+                          </div>
+                        </button>
+                      )}
 
-                          <span className="flex justify-center items-center">
-                            {data.postData.userData.likes &&
-                            userAuthIdPost &&
-                            data.postData.userData.likes.includes(
-                              userAuthIdPost
-                            )
-                              ? "Liked"
-                              : "Like"}
-                          </span>
-                        </div>
-                      </button>
                       <button className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center">
                         <div className="flex gap-2 p-1">
                           <FontAwesomeIcon

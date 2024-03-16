@@ -14,24 +14,18 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <>
-      {/* <BackgroundGradientAnimation> */}
-      <div className="  min-h-screen p-2">
-        <div className="flex flex-col border-2 border-white min-h-[97.5vh] rounded-2xl overflow-hidden">
+      <div className=" p-2  overflow-auto min-h-screen">
+        <div className="flex flex-col border-2 border-white  rounded-2xl overflow-hidden min-h-[97.5vh]">
           <Navbar />
           <div className="flex flex-1">
             <Sidebar />
-            <div className="overflow-hidden border-2 border-red-500 w-full  rounded-lg">
-              {/* <BackgroundGradientAnimation> */}
-                <main className="max-w-3xl mx-auto">
-                  {children}
-                </main>
-              {/* </BackgroundGradientAnimation> */}
+            <div className="overflow-hidden border-2 border-red-500 w-full  rounded-lg ">
+              <main className="max-w-3xl mx-auto">{children}</main>
             </div>
             <RightSidebar />
           </div>
         </div>
       </div>
-      {/* </BackgroundGradientAnimation> */}
     </>
   );
 };

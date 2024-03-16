@@ -71,19 +71,45 @@ io.on("connection", (socket) => {
   });
 
   socket.on("newLike", (data) => {
-    console.log("Received new like:", data);
+    console.log("Received new like post:", data);
 
     io.emit("broadcastLike", data);
-
-    // emitDataChanged();
   });
 
   socket.on("newLike1", (data) => {
-    console.log("Received new like:", data);
+    console.log("Received new like specific post:", data);
 
     io.emit("broadcastLike1", data);
+  });
 
-    // emitDataChanged();
+  socket.on("removeLike", (data) => {
+    console.log("Received remove like post:", data);
+
+    io.emit("broadcastRemoveLike", data);
+  });
+
+  socket.on("removeLike1", (data) => {
+    console.log("Received remove like specific post:", data);
+
+    io.emit("broadcastRemoveLike1", data);
+  });
+
+  socket.on("commentReply", (data) => {
+    console.log("Received comment reply:", data);
+
+    io.emit("broadcastReply", data);
+  });
+
+  socket.on("newLikeComment", (data) => {
+    console.log("Received add like comment:", data);
+
+    io.emit("broadcastLikeComment", data);
+  });
+
+  socket.on("removeLikeComment", (data) => {
+    console.log("Received remove like comment:", data);
+
+    io.emit("broadcastRemoveLikeComment", data);
   });
 
   // Clean up the interval when the socket disconnects

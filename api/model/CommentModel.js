@@ -24,7 +24,7 @@ const CommentSchema = new mongoose.Schema(
       {
         text: String,
         created: { type: Date, default: Date.now },
-        postedBy: {
+        replyBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "users",
         },

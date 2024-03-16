@@ -30,24 +30,7 @@ const insertData = async (req, res, next) => {
 
 // const getPostData = async (req, res, next) => {
 //   try {
-//     const allData = await PostModel.find()
-//       .populate({
-//         path: "postedBy",
-//         model: UserModel,
-//         select: "firstName lastName profilePhoto",
-//       })
-//       .sort({
-//         createdAt: -1,
-//       });
-
-//     res.status(200).json(allData);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// const getPostData = async (req, res, next) => {
-//   try {
+//     // Fetch all posts with user information
 //     const allPosts = await PostModel.find()
 //       .populate({
 //         path: "postedBy",
@@ -58,17 +41,20 @@ const insertData = async (req, res, next) => {
 //         createdAt: -1,
 //       });
 
-//     const postsWithComments = await Promise.all(
+//     // Fetch comments and likes for each post
+//     const postsWithCommentsAndLikes = await Promise.all(
 //       allPosts.map(async (post) => {
 //         const comments = await getCommentsByPostId(post._id);
+//         const likesData = await getLikesByPostId(post.likes);
 //         return {
 //           ...post.toObject(),
 //           comments,
+//           likes: likesData,
 //         };
 //       })
 //     );
 
-//     res.status(200).json(postsWithComments);
+//     res.status(200).json(postsWithCommentsAndLikes);
 //   } catch (error) {
 //     next(error);
 //   }
@@ -76,7 +62,13 @@ const insertData = async (req, res, next) => {
 
 const getPostData = async (req, res, next) => {
   try {
-    // Fetch all posts with user information
+    // Pagination parameters
+    const page = parseInt(req.query.page); 
+    const limit = parseInt(req.query.limit); 
+
+    const skip = (page - 1) * limit;
+
+    // Fetch posts with pagination and user information
     const allPosts = await PostModel.find()
       .populate({
         path: "postedBy",
@@ -85,7 +77,9 @@ const getPostData = async (req, res, next) => {
       })
       .sort({
         createdAt: -1,
-      });
+      })
+      .skip(skip) // Skip posts based on pagination
+      .limit(limit); // Limit the number of posts per page
 
     // Fetch comments and likes for each post
     const postsWithCommentsAndLikes = await Promise.all(
@@ -110,7 +104,6 @@ const getPostLikeData = async (req, res, next) => {
   try {
     const postId = req.params.postId;
 
-    // Find the post by postId
     const post = await PostModel.findById(postId);
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -145,23 +138,6 @@ const getLikesByPostId = async (likesArray) => {
     throw error;
   }
 };
-
-// const getLikesByPostId = async (postId) => {
-//   try {
-//     const likeData = await PostModel.findOne({ _id: postId }).populate({
-//       path: "likes",
-//       model: UserModel,
-//       select: "firstName lastName profilePhoto",
-//     });
-//     if (!likeData) {
-//       throw new Error("Likes not found");
-//     }
-
-//     return likeData.likes; // Assuming you want to return only the likes array
-//   } catch (error) {
-//     throw error;
-//   }
-// };
 
 const getPostDataById = async (postId) => {
   const postData = await PostModel.findOne({ _id: postId }).populate({
@@ -222,14 +198,29 @@ const addLike = async (req, res, next) => {
       },
       { new: true }
     );
-    const posts = await PostModel.find()
-      .sort({ createdAt: -1 })
-      .populate("postedBy", "firstName");
 
     res.status(200).json({
       success: true,
       post,
-      posts,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeLike = async (req, res, next) => {
+  try {
+    const post = await PostModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $pull: { likes: req.body.userId },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      post,
     });
   } catch (error) {
     next(error);
@@ -245,4 +236,5 @@ module.exports = {
   getUserInfoByPostId,
   getPostLikeData,
   addLike,
+  removeLike,
 };

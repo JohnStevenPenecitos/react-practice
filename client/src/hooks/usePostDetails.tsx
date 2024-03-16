@@ -77,7 +77,28 @@ export interface CommentItem {
     lastName: string;
     profilePhoto: string;
   };
+  comments?: Comment[];
   profilePhoto?: string;
+}
+
+export interface Comment {
+  _id: string;
+  text: string;
+  created: string;
+  replyBy?: {
+    firstName: string;
+    lastName: string;
+    profilePhoto?: string;
+  };
+  comments: {
+    text: string;
+    created: Date;
+    replyBy?: {
+      firstName: string;
+      lastName: string;
+      profilePhoto?: string;
+    };
+  }[];
 }
 
 interface UseAddDataPostOptions {
