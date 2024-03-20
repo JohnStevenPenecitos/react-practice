@@ -9,7 +9,7 @@
     "paths": {
       "@/utils/*": ["src/utils/*"]
     },
-
+ 
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

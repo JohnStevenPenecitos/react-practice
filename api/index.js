@@ -38,8 +38,22 @@ mongoose.connect(process.env.MONGO_DB_URI_LOCAL);
 
 // let lastDataUpdateTime = Date.now();
 
+const userSocketMap = {}; // {userId: socketId}
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
+
+  const userId = socket.handshake.query.userId;
+
+  if (userId && userId !== "undefined") {
+    userSocketMap[userId] = { _id: userId, socketId: socket.id };
+  }
+
+  // Emit online users to all clients
+  const onlineUsers = Object.values(userSocketMap).filter((user) => user._id);
+  io.emit("getOnlineUsers", onlineUsers);
+
+  console.log(userId);
 
   // Emit the "dataChanged" event only when there are actual changes
   // const emitDataChanged = () => {
@@ -112,9 +126,29 @@ io.on("connection", (socket) => {
     io.emit("broadcastRemoveLikeComment", data);
   });
 
+  socket.on("initialMessage", (data) => {
+    console.log("Received initial message:", data);
+
+    io.emit("broadcastInitialMessage", data);
+  });
+
+  socket.on("newMessage", (data) => {
+    console.log("Received new message:", data);
+
+    io.emit("broadcastMessage", data);
+  });
+
   // Clean up the interval when the socket disconnects
   socket.on("disconnect", () => {
-    // clearInterval(dataChangedInterval);
+    if (userId in userSocketMap) {
+      delete userSocketMap[userId]; // Remove the user from the userSocketMap
+      io.emit("getOnlineUsers", onlineUsers);
+    }
+
+    console.log("Client disconnected:", socket.id);
+
+    console.log("Client disconnected user:", userId);
+
   });
 });
 

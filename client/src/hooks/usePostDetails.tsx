@@ -6,6 +6,7 @@ import {
   useMutation,
 } from "react-query";
 import { io } from "socket.io-client";
+import { socket } from "./useData";
 // import { useAuthContext } from "../components/Auth";
 
 // interface dataItem {
@@ -113,7 +114,7 @@ interface MyError {
 
 // const userAuthId = authUser?._id;
 
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
 
 const fetchPostData = async (postId: string) => {
   return axios.get(`/api/user/${postId}`).then((response) => response.data);

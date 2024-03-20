@@ -150,4 +150,30 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { userSignUp, loginUser, logout };
+const searchUser = async (req, res) => {
+  try {
+    const { firstName } = req.query;
+
+    const users = await UserModel.find({
+      firstName: { $regex: new RegExp(firstName, "i") },
+    });
+
+    if (!users) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    const result = users.map((user) => ({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profilePhoto: user.profilePhoto,
+      _id: user._id,
+    }));
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error searching for users:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { userSignUp, loginUser, logout, searchUser };

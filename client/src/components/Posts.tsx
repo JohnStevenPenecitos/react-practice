@@ -20,6 +20,7 @@ import { useAuthContext } from "./Auth";
 import { io } from "socket.io-client";
 import { useQueryClient } from "react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
+import noMorePostImage from "/images/jelly-character-cant-find-the-right-page.png";
 
 const Posts = () => {
   const [alertVisible, setAlertVisibility] = useState(false);
@@ -138,7 +139,6 @@ const Posts = () => {
     useData();
 
   const [totalItems, setTotalItems] = useState(0);
-
 
   useEffect(() => {
     if (data) {
@@ -297,7 +297,7 @@ const Posts = () => {
             </Modal>
           )}
         </div>
-        {totalItems > 0 && (
+        {totalItems > 0 ? (
           <InfiniteScroll
             dataLength={totalItems}
             next={fetchNextPage}
@@ -349,17 +349,9 @@ const Posts = () => {
                                   <Image src={item.postedBy.profilePhoto} />
                                 )}
                                 <div className="flex flex-col">
-                                  <div className="flex flex-row gap-2 items-center">
-                                    {item.postedBy.firstName && (
-                                      <span className="font-bold">
-                                        {item.postedBy.firstName}
-                                      </span>
-                                    )}
-                                    {item.postedBy.lastName && (
-                                      <span className="font-bold">
-                                        {item.postedBy.lastName}
-                                      </span>
-                                    )}
+                                  <div className="flex  items-center font-bold">
+                                    {item.postedBy.firstName &&
+                                      `${item.postedBy.firstName} ${item.postedBy.lastName}`}
                                   </div>
                                   <span className="text-sm">
                                     {formatDistanceToNow(
@@ -463,7 +455,7 @@ const Posts = () => {
                                         : faHeartRegular
                                     }
                                   />
-                                  <span className="flex justify-center items-center">
+                                  <span className="flex justify-center items-center text-blue-500">
                                     Liked
                                   </span>
                                 </div>
@@ -526,14 +518,16 @@ const Posts = () => {
                 <div>No more posts available</div>
               )}
               {!hasNextPage && totalItems > 0 && (
-                <div className="p-5 bg-red-200 text-center rounded-lg">
-                  No more posts available
+                <div className=" bg-red-200 text-center rounded-lg flex justify-center items-center flex-col p-5">
+                  <img src={noMorePostImage} className="h-40 -mt-10" alt="" />
+                  <span className="font-bold">No more posts available</span>
                 </div>
               )}
             </div>
           </InfiniteScroll>
+        ) : (
+          <div>No posts available</div>
         )}
-        {totalItems === 0 && <div>No posts available</div>}
         {showLikedBy && (
           <Modal title="default" onClose={() => setShowLikedBy(false)}>
             <div className="max-h-[50vh] overflow-auto flex flex-col justify-start items-start">

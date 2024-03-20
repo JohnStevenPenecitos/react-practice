@@ -20,6 +20,7 @@ import TitlePage from "./TitlePage";
 import axios from "axios";
 import { useQueryClient } from "react-query";
 import { io } from "socket.io-client";
+import { socket } from "../hooks/useData";
 
 const PostDetails = () => {
   const { postId } = useParams<{ postId?: string }>();
@@ -36,7 +37,7 @@ const PostDetails = () => {
 
   const queryClient = useQueryClient();
 
-  const socket = io("http://localhost:3000");
+  // const socket = io("http://localhost:3000");
 
   const handleLikeClick = async (postId: string) => {
     try {
@@ -155,7 +156,7 @@ const PostDetails = () => {
               <p>No data available</p>
             )}
 
-            <div className=" w-full absolute flex justify-start items-start -z-10">
+            <div className=" w-full absolute flex justify-start items-start -z-10 mt-1">
               <Link to={`/app/about/`} className="p-2">
                 <FontAwesomeIcon
                   className="rounded-full p-2 text-sm bg-gray-500 text-white"
@@ -164,7 +165,7 @@ const PostDetails = () => {
               </Link>
             </div>
           </div>
-          <div className="p-2  max-h-[72vh] overflow-auto bg-amber-200">
+          <div className="p-2  max-h-[70vh] overflow-auto bg-amber-200">
             <div>
               {data && data.postData ? (
                 <div>
@@ -424,7 +425,7 @@ const PostDetails = () => {
               onSubmit={handleSubmitComment}
             >
               <Form>
-                <div className="flex gap-[5px]">
+                <div className="flex gap-2">
                   {authUser ? (
                     <>
                       <div className="flex-nowrap">
@@ -441,7 +442,7 @@ const PostDetails = () => {
                     id="content"
                     name="content"
                     placeholder="Write your comment..."
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded-full w-full"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 rounded-full w-[90%]"
                   />
                 </div>
               </Form>

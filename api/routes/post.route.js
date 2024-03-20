@@ -5,7 +5,7 @@ const {
   test,
   insertData,
   getPostData,
-  getPostDataById,
+  // getPostDataById,
   updatePostName,
   getUserInfoByPostId,
   addLike,
@@ -27,7 +27,11 @@ const {
   userSignUp,
   loginUser,
   logout,
+  searchUser,
 } = require("../controllers/user.controller.js");
+
+const { initialSendMessageTo, sendMessageTo } = require("../controllers/message.controller.js");
+const { getAllConversations } = require("../controllers/conversation.controller.js");
 
 const router = express.Router();
 
@@ -70,5 +74,18 @@ router.get("/comment-replies/:commentId", getReplyCommentData);
 router.put("/addlike-comment/:id", addLikeComment);
 
 router.put("/removelike-comment/:id", removeLikeComment);
+
+//Messages Routes
+router.post("/search-user", searchUser);
+
+router.post("/send-initial-message", initialSendMessageTo);
+
+router.post("/conversations", getAllConversations);
+
+router.post("/send-message", sendMessageTo);
+
+
+
+
 
 module.exports = router;

@@ -9,6 +9,7 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import SignUp from "./components/SignUp";
 import { useAuthContext } from "./components/Auth";
+
 // import { useAuth } from "./components/Auth";
 
 // const LazyAbout = React.lazy(() => import("./components/About"));

@@ -1,5 +1,5 @@
 const CommentModel = require("../model/CommentModel.js");
-const PostModel = require("../model/PostModel.js");
+// const PostModel = require("../model/PostModel.js");
 const UserModel = require("../model/UserModel.js");
 
 const testComment = (req, res) => {
