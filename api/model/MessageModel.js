@@ -12,11 +12,15 @@ const MessageSchema = new mongoose.Schema(
       ref: "users",
       required: true,
     },
-    seenBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-      created: { type: Date, default: Date.now },
-    },
+    seenMessage: [
+      {
+        seenBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "users",
+        },
+        created: { type: Date, default: Date.now },
+      },
+    ],
     message: {
       type: String,
       required: true,

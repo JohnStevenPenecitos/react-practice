@@ -29,7 +29,7 @@ import axios from "axios";
 import { useQueryClient } from "react-query";
 import { socket } from "../hooks/useData";
 
-function Chat() {
+function CopyChat() {
   const [isContentVisible, setIsContentVisible] = useState(true);
   const [selectedMessage, setSelectedMessage] =
     useState<ConversationItem | null>(null);
@@ -70,13 +70,25 @@ function Chat() {
 
   const { onlineUsers } = useSocketContext();
 
+  //   const messagesEndRef = useRef<HTMLDivElement>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  //   const scrollToBottom = () => {
+  //     if (messagesEndRef.current) {
+  //       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  //     }
+  //   };
 
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView();
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   });
+
+  //   useEffect(() => {
+  //     scrollToBottom();
+  //   }, [conversation]);
 
   const [showSearch, setShowSearch] = useState(false);
 
@@ -369,7 +381,7 @@ function Chat() {
                   )}
 
                   {isContentVisible && (
-                    <div className="flex justify-end w-full items-center">
+                    <div className="flex justify-end w-full items-center ">
                       <FontAwesomeIcon
                         className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-2xl bg-gray-200"
                         icon={faPenToSquare}
@@ -466,7 +478,7 @@ function Chat() {
                               )}
                             </div>
 
-                            <div className="overflow-auto max-h-[59vh]">
+                            <div className="overflow-auto max-h-[59vh] ">
                               <div className="min-h-[58vh] bg-amber-200 flex flex-col justify-end p-2">
                                 {conversation.messages &&
                                   conversation.messages.map(
@@ -507,48 +519,6 @@ function Chat() {
                                                     {message.message}
                                                   </div>
 
-                                                  {/* {message &&
-                                                    message.seenMessage &&
-                                                    conversation.messages &&
-                                                    conversation.messages
-                                                      .length > 0 &&
-                                                    conversation.messages
-                                                      .slice()
-                                                      .reverse()
-                                                      .find(
-                                                        (msg) =>
-                                                          msg.senderId ===
-                                                          userAuthIdPost
-                                                      ) === message && (
-                                                      <div className="flex justify-end">
-                                                        {message.seenMessage.map(
-                                                          (seenUser, index) => {
-                                                            if (
-                                                              seenUser.seenBy &&
-                                                              seenUser.seenBy
-                                                                .profilePhoto &&
-                                                              userAuthIdPost.includes(
-                                                                message.senderId
-                                                              )
-                                                            ) {
-                                                              return (
-                                                                <img
-                                                                  key={index}
-                                                                  src={
-                                                                    seenUser
-                                                                      .seenBy
-                                                                      .profilePhoto
-                                                                  }
-                                                                  className="w-5 h-5 rounded-full mt-1"
-                                                                />
-                                                              );
-                                                            }
-                                                            return null;
-                                                          }
-                                                        )}
-                                                      </div>
-                                                    )} */}
-
                                                   {message &&
                                                     message.seenMessage &&
                                                     conversation.messages &&
@@ -580,54 +550,6 @@ function Chat() {
                                                         )}
                                                       </div>
                                                     )}
-
-                                                  {/* {message &&
-                                                    message.seenMessage &&
-                                                    conversation &&
-                                                    conversation.messages &&
-                                                    conversation.messages
-                                                      .length > 1 && (
-                                                      <div className="flex justify-end">
-                                                        {conversation.messages[
-                                                          conversation.messages
-                                                            .length - 1
-                                                        ].senderId ===
-                                                          userAuthIdPost &&
-                                                          message ===
-                                                            conversation
-                                                              .messages[
-                                                              conversation
-                                                                .messages
-                                                                .length - 1
-                                                            ] && (
-                                                            <div>
-                                                              {message.seenMessage.map(
-                                                                (
-                                                                  seenUser,
-                                                                  index
-                                                                ) =>
-                                                                  seenUser &&
-                                                                  seenUser.seenBy &&
-                                                                  seenUser
-                                                                    .seenBy
-                                                                    .profilePhoto && (
-                                                                    <img
-                                                                      key={
-                                                                        index
-                                                                      }
-                                                                      src={
-                                                                        seenUser
-                                                                          .seenBy
-                                                                          .profilePhoto
-                                                                      }
-                                                                      className="w-5 h-5 rounded-full mt-1"
-                                                                    />
-                                                                  )
-                                                              )}
-                                                            </div>
-                                                          )}
-                                                      </div>
-                                                    )} */}
                                                 </div>
 
                                                 {!isSender &&
@@ -644,7 +566,6 @@ function Chat() {
                                                     />
                                                   )}
                                               </div>
-                                              <div ref={messagesEndRef}></div>
                                             </motion.div>
                                           </div>
                                         );
@@ -656,6 +577,7 @@ function Chat() {
                               </div>
                             </div>
 
+                            {/* <div ref={messagesEndRef}></div> */}
                             <div className="bg-gray-700 flex justify-center items-center gap-1 p-3">
                               <FontAwesomeIcon
                                 className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-xl bg-gray-200"
@@ -1426,4 +1348,54 @@ function Chat() {
                                                 </div> */
 }
 
-export default Chat;
+{
+  /* {message &&
+                                                    message.seenMessage &&
+                                                    conversation &&
+                                                    conversation.messages &&
+                                                    conversation.messages
+                                                      .length > 1 && (
+                                                      <div className="flex justify-end">
+                                                        {conversation.messages[
+                                                          conversation.messages
+                                                            .length - 1
+                                                        ].senderId ===
+                                                          userAuthIdPost &&
+                                                          message ===
+                                                            conversation
+                                                              .messages[
+                                                              conversation
+                                                                .messages
+                                                                .length - 1
+                                                            ] && (
+                                                            <div>
+                                                              {message.seenMessage.map(
+                                                                (
+                                                                  seenUser,
+                                                                  index
+                                                                ) =>
+                                                                  seenUser &&
+                                                                  seenUser.seenBy &&
+                                                                  seenUser
+                                                                    .seenBy
+                                                                    .profilePhoto && (
+                                                                    <img
+                                                                      key={
+                                                                        index
+                                                                      }
+                                                                      src={
+                                                                        seenUser
+                                                                          .seenBy
+                                                                          .profilePhoto
+                                                                      }
+                                                                      className="w-5 h-5 rounded-full mt-1"
+                                                                    />
+                                                                  )
+                                                              )}
+                                                            </div>
+                                                          )}
+                                                      </div>
+                                                    )} */
+}
+
+export default CopyChat;

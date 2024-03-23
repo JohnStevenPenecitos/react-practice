@@ -14,7 +14,7 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <>
-      <div className=" p-2  min-h-screen">
+      <div className=" p-2  min-h-screen overflow-hidden">
         <div className="flex flex-col border-2 border-white  rounded-2xl overflow-hidden min-h-[97.5vh]">
           <Navbar />
           <div className="flex flex-1">

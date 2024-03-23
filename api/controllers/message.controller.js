@@ -127,7 +127,99 @@ const sendMessageTo = async (req, res, next) => {
   }
 };
 
+// const markMessageAsSeen = async (req, res) => {
+//   try {
+//     const messageId = req.params.id;
+//     const senderId = req.body.senderId;
+
+//     const newMessageSeen = {
+//       seenBy: senderId,
+//       created: new Date(),
+//     };
+
+//     const message = await MessageModel.findByIdAndUpdate(
+//       messageId,
+//       {
+//         $push: { seenMessage: newMessageSeen },
+//       },
+//       { new: true }
+//     );
+
+//     if (!message) {
+//       return res.status(404).json({ message: "Message not found" });
+//     }
+
+//     res.json({ message: "Message marked as seen" });
+//   } catch (error) {
+//     console.error("Error marking message as seen:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+const markMessageAsSeen = async (req, res) => {
+  try {
+    const messageId = req.params.id;
+    const receiverId = req.body.receiverId;
+
+    // Check if the senderId already exists in the seenMessage array
+    const message = await MessageModel.findOneAndUpdate(
+      {
+        _id: messageId,
+        "seenMessage.seenBy": { $ne: receiverId }, // Ensure senderId doesn't exist in seenBy array
+      },
+      {
+        $addToSet: {
+          seenMessage: {
+            seenBy: receiverId,
+            created: new Date(),
+          },
+        },
+      },
+      { new: true }
+    );
+
+    // if (!message) {
+    //   return res.status(404).json({ message: "Message not found" });
+    // }
+
+    res.json({ message: "Message marked as seen" });
+  } catch (error) {
+    console.error("Error marking message as seen:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// const markMessageAsSeen = async (req, res) => {
+//   try {
+//     const messageId = req.params.id;
+//     const senderId = req.body.senderId;
+
+//     const message = await MessageModel.findOneAndUpdate(
+//       { _id: messageId, "seenMessage.seenBy": { $ne: senderId } },
+//       { $addToSet: { seenMessage: { seenBy: senderId, created: new Date() } } },
+//       { new: true }
+//     );
+
+//     if (!message) {
+//       console.error("Message not found with ID:", messageId);
+//       return res.status(404).json({ message: "Message not found" });
+//     }
+
+//     if (message) {
+//       console.log("Message already seen with ID:", messageId);
+//       return res.status(200).json({ message: "Message already seen" });
+//     }
+
+//     console.log("Message marked as seen with ID:", messageId);
+//     res.json({ message: "Message marked as seen" });
+//   } catch (error) {
+//     console.error("Error marking message as seen:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
 module.exports = {
   initialSendMessageTo,
   sendMessageTo,
+  markMessageAsSeen,
 };

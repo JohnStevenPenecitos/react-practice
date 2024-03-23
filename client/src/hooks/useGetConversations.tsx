@@ -12,7 +12,6 @@ export interface ConversationItem {
   participants?: Participant[];
   messages?: Message[];
   createdAt: string;
-
 }
 
 // Interface for participant data
@@ -25,13 +24,58 @@ export interface Participant {
 }
 
 // Interface for message data
+// export interface Message {
+//   _id: string;
+//   senderId: string;
+//   receiverId: string;
+//   message: string;
+//   createdAt: string;
+//   seenMessage: {
+//     seenBy?: {
+//       firstName: string;
+//       lastName: string;
+//       profilePhoto: string;
+//       created: string;
+//     };
+//   };
+// }
+
 export interface Message {
   _id: string;
   senderId: string;
   receiverId: string;
   message: string;
   createdAt: string;
+  seenMessage?: {
+    _id: string;
+    seenBy?: {
+      firstName: string;
+      lastName: string;
+      profilePhoto?: string;
+    };
+    created: string;
+  }[];
 }
+
+// export interface SeenUser {
+//   // _id: string;
+//   // seenBy: {
+//   //   firstName: string;
+//   //   lastName: string;
+//   //   profilePhoto?: string;
+//   // };
+//   // created: string;
+
+//   seenMessage?: {
+//     _id: string;
+//     seenBy: {
+//       firstName: string;
+//       lastName: string;
+//       profilePhoto?: string;
+//     };
+//     created: string;
+//   };
+// }
 
 interface MyError {
   message: string;

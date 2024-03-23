@@ -165,7 +165,7 @@ const PostDetails = () => {
               </Link>
             </div>
           </div>
-          <div className="p-2  max-h-[70vh] overflow-auto bg-amber-200">
+          <div className="p-2  max-h-[70vh]  overflow-auto bg-amber-200">
             <div>
               {data && data.postData ? (
                 <div>

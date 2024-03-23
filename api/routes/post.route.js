@@ -30,8 +30,14 @@ const {
   searchUser,
 } = require("../controllers/user.controller.js");
 
-const { initialSendMessageTo, sendMessageTo } = require("../controllers/message.controller.js");
-const { getAllConversations } = require("../controllers/conversation.controller.js");
+const {
+  initialSendMessageTo,
+  sendMessageTo,
+  markMessageAsSeen,
+} = require("../controllers/message.controller.js");
+const {
+  getAllConversations,
+} = require("../controllers/conversation.controller.js");
 
 const router = express.Router();
 
@@ -84,8 +90,6 @@ router.post("/conversations", getAllConversations);
 
 router.post("/send-message", sendMessageTo);
 
-
-
-
+router.put("/message-seen/:id", markMessageAsSeen);
 
 module.exports = router;

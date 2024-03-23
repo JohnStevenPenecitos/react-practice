@@ -23,7 +23,7 @@ const navigation = [
   { name: "Profile", href: "profile" },
 ];
 
-const isMobile = window.innerWidth <= 600;
+const isMobile = window.innerWidth <= 300;
 
 const Navbar = () => {
   const getNavLinkClassName = ({ isActive }: { isActive?: boolean } = {}) => {
@@ -76,8 +76,8 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 flex items-center px-5 justify-between relative z-20">
-        <div className="flex  items-center gap-2">
+      <div className="bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 flex items-center px-5 justify-between relative ">
+        <div className="flex  items-center gap-2   ">
           {authUser ? (
             <>
               <div>
@@ -86,7 +86,7 @@ const Navbar = () => {
 
               <input
                 type="text"
-                className="rounded-full bg-gray-200  text-left pl-4 h-10 md:w-64 w-52 "
+                className="rounded-full bg-gray-200  text-left pl-4 h-10  lg:w-64 w-36 md:w-56"
                 placeholder="Search"
               />
             </>
@@ -95,8 +95,8 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="block md:hidden">
-          <div className="w-full flex justify-between items-center font-poppins md:hidden">
+        <div className=" block lg:hidden">
+          <div className="w-full flex justify-between items-center font-poppins">
             <motion.div
               initial={false}
               animate={isOpen ? "open" : "closed"}
@@ -179,7 +179,7 @@ const Navbar = () => {
           </div>
         </div>
         <div className=" w-full flex justify-center items-center absolute -ml-5 -z-10">
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <motion.nav
               className="bg-red-200 divide-x-2 divide-red-900 rounded-xl border-2 border-red-900 flex items-center justify-center"
               initial={{ opacity: 0, x: -20 }}
@@ -214,7 +214,7 @@ const Navbar = () => {
             </motion.nav>
           </div>
         </div>
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <div className=" flex justify-between items-center relative  gap-4">
             <div
               className=" bg-amber-300 p-2 rounded-full h-12 w-12 flex items-center justify-center cursor-pointer"

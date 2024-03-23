@@ -138,6 +138,10 @@ io.on("connection", (socket) => {
     io.emit("broadcastMessage", data);
   });
 
+  socket.on("seenMessage", () => {
+    io.emit("broadcastSeenMessage");
+  });
+
   // Clean up the interval when the socket disconnects
   socket.on("disconnect", () => {
     if (userId in userSocketMap) {
@@ -148,7 +152,6 @@ io.on("connection", (socket) => {
     console.log("Client disconnected:", socket.id);
 
     console.log("Client disconnected user:", userId);
-
   });
 });
 
