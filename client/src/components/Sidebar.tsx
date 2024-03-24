@@ -11,7 +11,11 @@ const navigation = [
   { name: "Messages", href: "messages" },
 ];
 
-function Sidebar() {
+function Sidebar({
+  setIsMessagesActive,
+}: {
+  setIsMessagesActive: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const { authUser } = useAuthContext();
 
   const getNavLinkClassName = ({ isActive }: { isActive?: boolean }) => {
@@ -29,7 +33,7 @@ function Sidebar() {
 
   return (
     <>
-      <div className="hidden lg:block bg-red-200 w-[30rem] border-2 border-blue-400 rounded-lg p-3">
+      <div className="hidden lg:block bg-red-200 w-[20rem] border-2 border-blue-400 rounded-lg p-3">
         <div>
           {authUser ? (
             <>
@@ -55,6 +59,7 @@ function Sidebar() {
               <NavLink
                 to={item.href}
                 className={getNavLinkClassName}
+                onClick={() => setIsMessagesActive(item.href === "messages")}
               >
                 {item.name}
               </NavLink>

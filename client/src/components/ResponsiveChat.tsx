@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "./Image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,24 +12,21 @@ import girlImage from "/images/jelly-no-messages-1.png";
 import Search from "./Search";
 import {
   ConversationItem,
-  Message,
-  // SeenUser,
   useConversationDetails,
 } from "../hooks/useGetConversations";
 import { useAuthContext } from "./Auth";
 import { motion } from "framer-motion";
-import { Field, FieldArray, Form, Formik, FormikHelpers } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useSendMessage } from "../hooks/useSendMessages";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { useSocketContext } from "./SocketContext";
 import { faFaceSmile, faImages } from "@fortawesome/free-regular-svg-icons";
 import EmojiPicker from "./EmojiPicker";
 import axios from "axios";
-// import { io } from "socket.io-client";
 import { useQueryClient } from "react-query";
 import { socket } from "../hooks/useData";
 
-function Chat() {
+function ResponsiveChat() {
   const [isContentVisible, setIsContentVisible] = useState(true);
   const [selectedMessage, setSelectedMessage] =
     useState<ConversationItem | null>(null);
@@ -115,11 +112,6 @@ function Chat() {
     }
   };
 
-  // const handleMessageClick = (conversation: ConversationItem) => {
-  //   setSelectedMessage(conversation);
-  //   setIsContentVisible(true);
-  // };
-
   const markMessageAsSeen = async (messageId: string, receiverId: string) => {
     try {
       // const queryClient = useQueryClient();
@@ -143,7 +135,7 @@ function Chat() {
 
   const handleMessageClick = async (conversation: ConversationItem) => {
     setSelectedMessage(conversation);
-    setIsContentVisible(false);
+    setIsContentVisible(true);
 
     // Call markMessageAsSeen for each message in the conversation
     if (conversation.messages && conversation.messages.length > 0) {
@@ -176,40 +168,6 @@ function Chat() {
     }
   };
 
-  // useEffect(() => {
-  //   if (conversation) {
-  //     if (
-  //       selectedMessage &&
-  //       conversation.messages &&
-  //       conversation.messages.length > 0
-  //     ) {
-  //       for (const message of conversation.messages) {
-  //         console.log("Message:", message);
-  //         console.log(
-  //           "ReceiverId:",
-  //           message.receiverId,
-  //           "UserAuthId:",
-  //           userAuthIdPost
-  //         );
-  //         if (message.receiverId === userAuthIdPost) {
-  //           console.log("Marking message as seen:", message._id);
-  //           try {
-  //             markMessageAsSeen(message._id, message.receiverId);
-  //             console.log("Message marked as seen successfully:", message._id);
-  //           } catch (error) {
-  //             console.error("Error marking message as seen:", error);
-  //           }
-  //         }
-  //       }
-  //     } else {
-  //       console.log("Conversation has no messages.");
-  //     }
-  //     console.log("Show Selected Message:", conversation.messages);
-  //   } else {
-  //     console.log("Conversation is null or undefined.");
-  //   }
-  // }, [conversation, selectedMessage, userAuthIdPost]);
-
   const handleBackToList = () => {
     setSelectedMessage(null);
     // setIsContentVisible(false);
@@ -228,39 +186,6 @@ function Chat() {
 
     return allMessageIds;
   };
-
-  // const getMessagesWithSeenMessage = (
-  //   conversation: ConversationItem
-  // ): Message[] => {
-  //   if (!conversation.messages || conversation.messages.length === 0) {
-  //     return []; // No messages in the conversation
-  //   }
-
-  //   // Filter messages that have a non-empty value in seenMessage
-  //   const messagesWithSeenMessage = conversation.messages.filter(
-  //     (message) => message.seenMessage && message.seenMessage.length > 0
-  //   );
-
-  //   return messagesWithSeenMessage;
-  // };
-
-  // const getEmptySeenMessagesCount = (
-  //   conversation: ConversationItem
-  // ): number => {
-  //   if (!conversation.messages || conversation.messages.length === 0) {
-  //     return 0; // No messages in the conversation
-  //   }
-
-  //   // Filter messages that have an empty value in seenMessage and receiverId is not equal to userAuthId
-  //   const emptySeenMessagesCount = conversation.messages.filter(
-  //     (message) =>
-  //       message.seenMessage &&
-  //       message.seenMessage.length > 0 &&
-  //       message.receiverId !== userAuthIdPost
-  //   ).length;
-
-  //   return emptySeenMessagesCount;
-  // };
 
   const getEmptySeenMessagesCount = (
     conversation: ConversationItem
@@ -331,11 +256,9 @@ function Chat() {
         </div>
       ) : (
         <motion.div
-          className={`w-[${
-            !isContentVisible ? "20rem" : "5rem"
-          }] flex flex-col w-full`}
+          className={`w-[${isContentVisible ? "full" : "full"}]  w-full`}
           initial={{ width: "full", opacity: 0 }}
-          animate={{ width: !isContentVisible ? "20rem" : "5rem", opacity: 1 }}
+          animate={{ width: isContentVisible ? "full" : "full", opacity: 1 }}
           transition={{
             duration: 1,
             ease: [0, 0.3, 0.3, 1.01],
@@ -347,21 +270,14 @@ function Chat() {
             },
           }}
         >
-          <div className="flex flex-col ">
-            <div className="mb-5">
+          <div className="">
+            <div className="mb-5 ">
               {!selectedMessage && (
                 <motion.div
-                  className={`flex w-full   ${
-                    !isContentVisible ? "justify-between" : "justify-center"
+                  className={`flex w-full  ${
+                    isContentVisible ? "justify-between" : "justify-center"
                   } items-center`}
                 >
-                  {!showSearch && (
-                    <FontAwesomeIcon
-                      className="hover:bg-gray-400  rounded-full cursor-pointer p-2 text-gray-800 text-2xl bg-gray-200"
-                      icon={!isContentVisible ? faCaretLeft : faCaretRight}
-                      onClick={toggleContentVisibility}
-                    />
-                  )}
                   {showSearch && (
                     <FontAwesomeIcon
                       className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-2xl bg-gray-200"
@@ -370,7 +286,7 @@ function Chat() {
                     />
                   )}
 
-                  {!isContentVisible && (
+                  {isContentVisible && (
                     <div className="flex justify-end w-full items-center">
                       <FontAwesomeIcon
                         className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-2xl bg-gray-200"
@@ -383,7 +299,7 @@ function Chat() {
               )}
             </div>
 
-            <div className="overflow-auto max-h-[75vh] relative  scrollbar-thin  scrollbar-thumb-purple-500 scrollbar-track-gray-300 scroll-smooth">
+            <div className="overflow-auto max-h-[70vh] relative  scrollbar-thin  scrollbar-thumb-purple-500 scrollbar-track-gray-300 scroll-smooth">
               {!showSearch &&
                 data.map((conversation: ConversationItem) => {
                   const isParticipant = conversation.participants?.find(
@@ -408,10 +324,10 @@ function Chat() {
 
                   if (isParticipant) {
                     return (
-                      <div key={conversation._id} className="flex flex-col ">
-                        <div className="  relative  overflow-hidden">
+                      <div key={conversation._id} className=" flex justify-end">
+                        <div className="overflow-hidden w-full ">
                           <div
-                            className=" bg-blue-200 p-2 rounded-xl   hover:bg-gray-200 cursor-pointer mb-2 mx-1"
+                            className=" bg-blue-200 p-2 rounded-xl   hover:bg-gray-200 cursor-pointer mb-2 mx-1 relative "
                             onClick={() => handleMessageClick(conversation)}
                             style={{
                               display: selectedMessage ? "none" : "flex",
@@ -426,8 +342,8 @@ function Chat() {
                                     conversation.messages.length - 1
                                   ]?._id
                                 }
-                                className={`flex justify-center items-center gap-2    ${
-                                  !isContentVisible ? "mx-0" : "mx-auto"
+                                className={`flex justify-center items-center gap-2 ${
+                                  isContentVisible ? "mx-0 w-full" : "mx-auto"
                                 }`}
                               >
                                 {conversation &&
@@ -436,7 +352,7 @@ function Chat() {
                                   conversation.messages[
                                     conversation.messages.length - 1
                                   ]?.senderId && (
-                                    <div className="flex flex-row justify-end items-end w-12">
+                                    <div className="flex flex-row justify-end items-end w-16">
                                       <Image
                                         key={`sender_${
                                           conversation.messages[
@@ -493,274 +409,311 @@ function Chat() {
                                     </div>
                                   )}
 
-                                {!isContentVisible &&
-                                  conversation.messages[
-                                    conversation.messages.length - 1
-                                  ] && (
-                                    <div className="">
-                                      <div
-                                        className="flex flex-col"
-                                        key={
+                                <div className="w-full">
+                                  {isContentVisible &&
+                                    conversation.messages[
+                                      conversation.messages.length - 1
+                                    ] && (
+                                      <div>
+                                        <div
+                                          className="flex flex-col w-full"
+                                          key={
+                                            conversation.messages[
+                                              conversation.messages.length - 1
+                                            ]._id
+                                          }
+                                        >
+                                          {conversation.participants &&
+                                          conversation.participants.length >
+                                            0 &&
+                                          userAuthIdPost &&
+                                          conversation.messages &&
+                                          conversation.messages.length > 0 &&
                                           conversation.messages[
                                             conversation.messages.length - 1
-                                          ]._id
-                                        }
-                                      >
-                                        {conversation.participants &&
-                                        conversation.participants.length > 0 &&
-                                        userAuthIdPost &&
-                                        conversation.messages &&
-                                        conversation.messages.length > 0 &&
-                                        conversation.messages[
-                                          conversation.messages.length - 1
-                                        ]?.senderId ? (
-                                          <span className="font-bold">
-                                            {(() => {
-                                              const senderId =
-                                                conversation.messages[
-                                                  conversation.messages.length -
-                                                    1
-                                                ]?.senderId;
-                                              const messageReceiver =
-                                                conversation.participants.find(
-                                                  (p) =>
-                                                    p._id ===
-                                                    (userAuthIdPost ===
-                                                      senderId &&
+                                          ]?.senderId ? (
+                                            <span className="font-bold">
+                                              {(() => {
+                                                const senderId =
+                                                  conversation.messages[
                                                     conversation.messages
-                                                      ? conversation.messages[
-                                                          conversation.messages
-                                                            .length - 1
-                                                        ]?.receiverId
-                                                      : senderId)
+                                                      .length - 1
+                                                  ]?.senderId;
+                                                const messageReceiver =
+                                                  conversation.participants.find(
+                                                    (p) =>
+                                                      p._id ===
+                                                      (userAuthIdPost ===
+                                                        senderId &&
+                                                      conversation.messages
+                                                        ? conversation.messages[
+                                                            conversation
+                                                              .messages.length -
+                                                              1
+                                                          ]?.receiverId
+                                                        : senderId)
+                                                  );
+
+                                                return (
+                                                  <>
+                                                    {`${messageReceiver?.firstName} ${messageReceiver?.lastName}`}
+                                                  </>
                                                 );
+                                              })()}
+                                            </span>
+                                          ) : (
+                                            ""
+                                          )}
 
-                                              return (
-                                                <>
-                                                  {`${messageReceiver?.firstName} ${messageReceiver?.lastName}`}
-                                                </>
-                                              );
-                                            })()}
-                                          </span>
-                                        ) : (
-                                          ""
-                                        )}
-
-                                        <span className="w-60">
                                           {conversation &&
                                           conversation.messages &&
                                           conversation.messages.length > 0 &&
                                           conversation.messages[
                                             conversation.messages.length - 1
                                           ]?.senderId === userAuthIdPost ? (
-                                            <div className=" flex justify-between">
-                                              <div className="flex gap-1 truncate">
-                                                You:
-                                                <div
-                                                  className={`truncate ${
-                                                    conversation.messages[
-                                                      conversation.messages
-                                                        .length - 1
-                                                    ].message.length < 15
-                                                      ? ""
-                                                      : "w-32"
-                                                  }`}
-                                                >
-                                                  {
-                                                    conversation.messages[
-                                                      conversation.messages
-                                                        .length - 1
-                                                    ].message
-                                                  }
-                                                </div>
-                                                <div className="flex justify-center items-center text-center">
-                                                  <span className="text-xl -mt-1">
-                                                    ·
+                                            <span className="w-full">
+                                              <div className=" flex justify-between  w-full">
+                                                <div className="flex gap-1 truncate ">
+                                                  You:
+                                                  <div
+                                                    className={`truncate ${
+                                                      conversation.messages[
+                                                        conversation.messages
+                                                          .length - 1
+                                                      ].message.length < 15
+                                                        ? ""
+                                                        : "sm:w-24 w-12 md:w-32"
+                                                    }`}
+                                                  >
+                                                    {
+                                                      conversation.messages[
+                                                        conversation.messages
+                                                          .length - 1
+                                                      ].message
+                                                    }
+                                                  </div>
+                                                  <div className="flex justify-center items-center text-center">
+                                                    <span className="text-xl -mt-1">
+                                                      ·
+                                                    </span>
+                                                  </div>
+                                                  <span className="">
+                                                    {(() => {
+                                                      const timeDifference =
+                                                        formatDistanceToNow(
+                                                          new Date(
+                                                            conversation.messages[
+                                                              conversation
+                                                                .messages
+                                                                .length - 1
+                                                            ].createdAt
+                                                          ),
+                                                          {
+                                                            addSuffix: false,
+                                                            includeSeconds:
+                                                              true,
+                                                          }
+                                                        );
+                                                      let formattedTime =
+                                                        timeDifference;
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "about"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /about/i,
+                                                            ""
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "less than 5 second"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /less than 5 second/i,
+                                                            "1m"
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "less than 10 second"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /less than 10 second/i,
+                                                            "1m"
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "less than 20 second"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /less than 20 second/i,
+                                                            "1m"
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "half a minute"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /half a minute/i,
+                                                            "1m"
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "less than a minute"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /less than a minute/i,
+                                                            "1m"
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "minute"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /(\d) minute/,
+                                                            "$1m"
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "hour"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /(\d) hour/,
+                                                            "$1h"
+                                                          );
+                                                      }
+                                                      if (
+                                                        timeDifference.includes(
+                                                          "day"
+                                                        )
+                                                      ) {
+                                                        formattedTime =
+                                                          formattedTime.replace(
+                                                            /(\d) day/,
+                                                            "$1d"
+                                                          );
+                                                      }
+                                                      return formattedTime.replace(
+                                                        /s$/,
+                                                        ""
+                                                      );
+                                                    })()}
                                                   </span>
                                                 </div>
-                                                <span className="">
-                                                  {(() => {
-                                                    const timeDifference =
-                                                      formatDistanceToNow(
-                                                        new Date(
-                                                          conversation.messages[
-                                                            conversation
-                                                              .messages.length -
-                                                              1
-                                                          ].createdAt
-                                                        ),
-                                                        {
-                                                          addSuffix: false,
-                                                          includeSeconds: true,
-                                                        }
-                                                      );
-                                                    let formattedTime =
-                                                      timeDifference;
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "about"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /about/i,
-                                                          ""
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "less than 5 second"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /less than 5 second/i,
-                                                          "1m"
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "less than 10 second"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /less than 10 second/i,
-                                                          "1m"
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "less than 20 second"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /less than 20 second/i,
-                                                          "1m"
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "half a minute"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /half a minute/i,
-                                                          "1m"
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "less than a minute"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /less than a minute/i,
-                                                          "1m"
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "minute"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /(\d) minute/,
-                                                          "$1m"
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "hour"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /(\d) hour/,
-                                                          "$1h"
-                                                        );
-                                                    }
-                                                    if (
-                                                      timeDifference.includes(
-                                                        "day"
-                                                      )
-                                                    ) {
-                                                      formattedTime =
-                                                        formattedTime.replace(
-                                                          /(\d) day/,
-                                                          "$1d"
-                                                        );
-                                                    }
-                                                    return formattedTime.replace(
-                                                      /s$/,
-                                                      ""
-                                                    );
-                                                  })()}
-                                                </span>
-                                              </div>
-                                              <div>
-                                                {conversation.messages &&
-                                                conversation.messages[
-                                                  conversation.messages.length -
-                                                    1
-                                                ]?.senderId === userAuthIdPost
-                                                  ? conversation.messages.map(
-                                                      (message, index) => (
-                                                        <div
-                                                          key={index}
-                                                          className="flex flex-row-reverse justify-center items-center gap-1"
-                                                        >
-                                                          <div className="flex flex-col">
-                                                            {index ===
-                                                              (conversation
-                                                                .messages
-                                                                ?.length ?? 0) -
-                                                                1 &&
-                                                              message &&
-                                                              message.seenMessage &&
-                                                              message
-                                                                .seenMessage
-                                                                .length > 0 && (
-                                                                <div className="flex justify-end">
-                                                                  {message.seenMessage.map(
-                                                                    (
-                                                                      seenMessage,
-                                                                      index
-                                                                    ) =>
-                                                                      seenMessage &&
-                                                                      seenMessage.seenBy &&
-                                                                      seenMessage
-                                                                        .seenBy
-                                                                        .profilePhoto ? (
-                                                                        <img
-                                                                          key={
-                                                                            index
-                                                                          }
-                                                                          src={
-                                                                            seenMessage
-                                                                              .seenBy
-                                                                              .profilePhoto
-                                                                          }
-                                                                          alt="Profile"
-                                                                          className="w-5 h-5 rounded-full mt-1"
-                                                                        />
-                                                                      ) : null
-                                                                  )}
-                                                                </div>
-                                                              )}
+                                                <div>
+                                                  {conversation.messages &&
+                                                  conversation.messages[
+                                                    conversation.messages
+                                                      .length - 1
+                                                  ]?.senderId === userAuthIdPost
+                                                    ? conversation.messages.map(
+                                                        (message, index) => (
+                                                          <div
+                                                            key={index}
+                                                            className="flex flex-row-reverse justify-center items-center gap-1"
+                                                          >
+                                                            <div className="flex flex-col">
+                                                              {index ===
+                                                                (conversation
+                                                                  .messages
+                                                                  ?.length ??
+                                                                  0) -
+                                                                  1 &&
+                                                                message &&
+                                                                message.seenMessage &&
+                                                                message
+                                                                  .seenMessage
+                                                                  .length >
+                                                                  0 && (
+                                                                  <div className="flex justify-end">
+                                                                    {message.seenMessage.map(
+                                                                      (
+                                                                        seenMessage,
+                                                                        index
+                                                                      ) =>
+                                                                        seenMessage &&
+                                                                        seenMessage.seenBy &&
+                                                                        seenMessage
+                                                                          .seenBy
+                                                                          .profilePhoto ? (
+                                                                          <img
+                                                                            key={
+                                                                              index
+                                                                            }
+                                                                            src={
+                                                                              seenMessage
+                                                                                .seenBy
+                                                                                .profilePhoto
+                                                                            }
+                                                                            alt="Profile"
+                                                                            className="w-5 h-5 rounded-full mt-1"
+                                                                          />
+                                                                        ) : null
+                                                                    )}
+                                                                  </div>
+                                                                )}
+                                                            </div>
                                                           </div>
-                                                        </div>
+                                                        )
                                                       )
-                                                    )
-                                                  : null}
+                                                    : null}
+                                                </div>
                                               </div>
-                                            </div>
+                                            </span>
                                           ) : (
                                             <div className="flex gap-1">
+                                              {/* <div className="truncate">
+                                                {
+                                                  conversation.messages[
+                                                    conversation.messages
+                                                      .length - 1
+                                                  ].message
+                                                }
+                                              </div> */}
+
+                                              {/* {conversation.messages &&
+                                                conversation.messages
+                                                  .length && (
+                                                  <div
+                                                    className={
+                                                      getEmptySeenMessagesCount(
+                                                        conversation
+                                                      ) > 0
+                                                        ? "md:w-56 sm:w-32 w-24 truncate font-bold"
+                                                        : "md:w-56 sm:w-32 w-24 truncate "
+                                                    }
+                                                  >
+                                                    {
+                                                      conversation.messages[
+                                                        conversation.messages
+                                                          .length - 1
+                                                      ].message
+                                                    }
+                                                  </div>
+                                                )} */}
+
                                               {conversation.messages &&
                                                 conversation.messages
                                                   .length && (
@@ -770,15 +723,26 @@ function Chat() {
                                                         conversation
                                                       ) > 0
                                                         ? "truncate font-bold"
-                                                        : "truncate "
+                                                        : "truncate"
                                                     }
                                                   >
-                                                    {
-                                                      conversation.messages[
-                                                        conversation.messages
-                                                          .length - 1
-                                                      ].message
-                                                    }
+                                                    <div
+                                                      className={
+                                                        conversation.messages[
+                                                          conversation.messages
+                                                            .length - 1
+                                                        ].message.length < 15
+                                                          ? ""
+                                                          : "truncate w-28"
+                                                      }
+                                                    >
+                                                      {
+                                                        conversation.messages[
+                                                          conversation.messages
+                                                            .length - 1
+                                                        ].message
+                                                      }
+                                                    </div>
                                                   </div>
                                                 )}
 
@@ -911,29 +875,22 @@ function Chat() {
                                               </span>
                                             </div>
                                           )}
-                                        </span>
+                                        </div>
                                       </div>
-                                    </div>
-                                  )}
+                                    )}
+                                </div>
                               </div>
                             ) : null}
-
-                            <div
-                              className={`${
-                                isContentVisible
-                                  ? "right-5 bottom-2 flex relative"
-                                  : "right-7 bottom-2 flex relative"
-                              }`}
-                            >
-                              {conversation.messages &&
-                                conversation.messages.length &&
-                                getEmptySeenMessagesCount(conversation) > 0 && (
-                                  <div className="text-sm bg-red-300 rounded-full h-7 w-7 flex justify-center items-center font-bold absolute ">
-                                    {getEmptySeenMessagesCount(conversation)}
-                                  </div>
-                                )}
-                            </div>
                           </div>
+                        </div>
+                        <div className="flex absolute right-1">
+                          {conversation.messages &&
+                            conversation.messages.length &&
+                            getEmptySeenMessagesCount(conversation) > 0 && (
+                              <div className="text-sm bg-red-300 rounded-full h-7 w-7 flex justify-center items-center font-bold">
+                                {getEmptySeenMessagesCount(conversation)}
+                              </div>
+                            )}
                         </div>
                       </div>
                     );
@@ -942,6 +899,7 @@ function Chat() {
                   }
                 })}
             </div>
+
             {!showSearch ? (
               data.map((conversation: ConversationItem) => {
                 const isParticipant = conversation.participants?.find(
@@ -966,13 +924,10 @@ function Chat() {
 
                 if (isParticipant) {
                   return (
-                    <div
-                      key={conversation._id}
-                      className="flex flex-col max-h-[50vh] "
-                    >
+                    <div key={conversation._id} className="">
                       {selectedMessage &&
                         selectedMessage._id === conversation._id && (
-                          <div className="gap-2 flex flex-col  p-1 ">
+                          <div className=" gap-2 flex flex-col ">
                             <div className="flex justify-start">
                               <FontAwesomeIcon
                                 className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-2xl bg-gray-200 -mt-4"
@@ -980,8 +935,8 @@ function Chat() {
                                 onClick={handleBackToList}
                               />
                             </div>
-                            <div className="rounded-lg overflow-auto">
-                              <div className="bg-gray-700 flex p-2 text-white font-bold relative">
+                            <div className=" rounded-lg overflow-hidden">
+                              <div className="bg-gray-700 flex p-2 text-white font-bold">
                                 {conversation.participants && (
                                   <div className="flex flex-row-reverse justify-center items-center gap-2">
                                     <div className="gap-1 flex">
@@ -1000,7 +955,7 @@ function Chat() {
                                         }
                                       </span>
                                     </div>
-                                    <div className="flex flex-row justify-end items-end">
+                                    <div className="flex flex-row justify-end items-end ">
                                       <Image
                                         src={
                                           conversation.participants.find(
@@ -1023,8 +978,9 @@ function Chat() {
                                   </div>
                                 )}
                               </div>
-                              <div className="overflow-auto max-h-[59vh]">
-                                <div className="min-h-[58vh] bg-amber-200 flex flex-col justify-end p-2">
+
+                              <div className="overflow-auto max-h-[53vh]">
+                                <div className="min-h-[53vh] bg-amber-200 flex flex-col justify-end p-2">
                                   {conversation.messages &&
                                     conversation.messages.map(
                                       (message, index) => {
@@ -1132,7 +1088,7 @@ function Chat() {
                                 <FontAwesomeIcon
                                   className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-xl bg-gray-200"
                                   icon={faFaceSmile}
-                                  onClick={() => setShowEmoji(!showEmoji)}
+                                  onClick={() => setShowEmoji(!showEmoji)} // Toggle the state variable on click
                                 />
 
                                 <Formik
@@ -1148,6 +1104,7 @@ function Chat() {
                                       : [],
                                   }}
                                   onSubmit={handleSendMessage}
+                                  // onClick={() => handleMessageClick(conversation)}
                                 >
                                   {({ values, setFieldValue }) => (
                                     <Form>
@@ -1203,4 +1160,4 @@ function Chat() {
   );
 }
 
-export default Chat;
+export default ResponsiveChat;

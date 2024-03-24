@@ -45,9 +45,9 @@ const Navbar = () => {
 
   /* Mobile navigation Style */
   const isHiddenStyle =
-    "absolute space-y-10 bg-red-500 w-full p-6 min-h-screen";
+    "absolute space-y-10 bg-red-500 w-full p-6 overflow-hidden hidden ";
   const isVisibleStyle =
-    "absolute space-y-10 bg-red-500 w-full p-6 left-0  right-0 top-0 min-h-screen";
+    "absolute space-y-10 bg-red-500 w-full p-6 left-0  right-0 top-0 overflow-hidden block min-h-screen";
 
   const itemVariants = {
     open: {
@@ -76,7 +76,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 flex items-center px-5 justify-between relative ">
+      <div className="bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 flex items-center px-5 justify-between relative z-20">
         <div className="flex  items-center gap-2   ">
           {authUser ? (
             <>
@@ -187,7 +187,7 @@ const Navbar = () => {
               transition={{ duration: 0.5 }}
             >
               {navigation.map((item) =>
-                item.name !== "Notifications" && item.name !== "Profile" ? (
+                item.name !== "Notifications" && item.name !== "Profile" && item.name !== "Messages" ? (
                   <motion.div
                     key={item.name}
                     initial={{ opacity: 0, x: -20 }}

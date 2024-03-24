@@ -274,7 +274,7 @@ const Posts = () => {
 
   return (
     <>
-      <div id="scrollableDiv" className="max-h-[87.7vh] overflow-auto">
+      <div id="scrollableDiv" className="max-h-[87.7vh] overflow-hidden ">
         <div className="max-w-sm mx-auto">
           {alertVisible && (
             <Modal title="update" onClose={() => setAlertVisibility(false)}>
@@ -330,6 +330,7 @@ const Posts = () => {
             }
             scrollableTarget="scrollableDiv"
             height={"76vh"}
+            className=" scrollbar-thin  scrollbar-thumb-purple-500 scrollbar-track-gray-300 scroll-smooth"
           >
             <div className="w-full p-2 ">
               {data && data.pages && data.pages.length > 0 ? (

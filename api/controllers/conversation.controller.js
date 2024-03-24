@@ -128,6 +128,9 @@ const getAllConversations = async (req, res, next) => {
             select: "firstName lastName profilePhoto",
           },
         },
+      })
+      .sort({
+        updatedAt: -1,
       });
 
     // Extract participant details from each conversation
