@@ -20,9 +20,9 @@ app.use(
   cors({
     // origin: ["https://my-react-app-sandy-six.vercel.app"],
     // origin: ["http://192.168.100.63:5173"],
-    origin: ["https://react-practice-uk4m.onrender.com/"],
+    // origin: ["https://react-practice-uk4m.onrender.com/"],
 
-    // origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
   })
@@ -40,8 +40,8 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     // origin: "http://localhost:5173", // Replace with your client's origin 
-    // origin: "http://192.168.100.63:5173", // Replace with your client's origin
-    origin: "https://react-practice-uk4m.onrender.com/", // Replace with your client's origin
+    origin: "http://192.168.100.63:5173", // Replace with your client's origin
+    // origin: "https://react-practice-uk4m.onrender.com/", // Replace with your client's origin
 
     methods: ["GET", "POST"],
   },
@@ -56,7 +56,10 @@ const io = socketIo(server, {
 // mongoose.connect("mongodb://localhost:27017/posts", {});
 
 // mongoose.connect("mongodb://localhost:27017/posts");
-mongoose.connect(process.env.MONGO_DB_URI_LOCAL);
+// mongoose.connect(process.env.MONGO_DB_URI_LOCAL);
+
+mongoose.connect(process.env.MONGO_DB_URI);
+
 
 // let lastDataUpdateTime = Date.now();
 
