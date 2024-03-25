@@ -38,7 +38,10 @@ interface UseAddDataPostOptions {
   userId: number | null;
 }
 
-export const socket = io("http://localhost:3000");
+// export const socket = io("http://localhost:3000");
+
+export const socket = io("https://react-practice-uk4m.onrender.com");
+
 
 // const socket = io("https://react-practice-zeta-rust.vercel.app");
 

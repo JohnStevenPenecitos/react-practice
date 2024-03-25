@@ -38,7 +38,10 @@ const Posts = () => {
 
   const userAuthIdPost = authUser?._id?.toString();
 
-  const socket = io("http://localhost:3000");
+  // const socket = io("http://localhost:3000");
+
+  const socket = io("https://react-practice-uk4m.onrender.com");
+
 
   const [likedUsers, setLikedUsers] = useState<any[]>([]);
 

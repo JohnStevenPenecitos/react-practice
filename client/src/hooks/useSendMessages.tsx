@@ -9,7 +9,10 @@ import {
 
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
+
+const socket = io("https://react-practice-uk4m.onrender.com");
+
 
 export interface User {
   _id: string;
