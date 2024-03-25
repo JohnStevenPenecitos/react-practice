@@ -39,7 +39,7 @@ app.use(
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5173", // Replace with your client's origin 
+    // origin: "http://localhost:5173", // Replace with your client's origin 
     // origin: "http://192.168.100.63:5173", // Replace with your client's origin
     origin: "https://react-practice-uk4m.onrender.com/", // Replace with your client's origin
 
