@@ -19,8 +19,8 @@ app.use(cookieParser());
 app.use(
   cors({
     // origin: ["https://my-react-app-sandy-six.vercel.app"],
-    // origin: ["http://192.168.100.63:5173"],
-    origin: ["https://react-practice-uk4m.onrender.com/"],
+    origin: ["http://192.168.100.63:5173"],
+    // origin: ["https://react-practice-uk4m.onrender.com/"],
 
     // origin: ["http://localhost:5173"],
     methods: ["POST", "GET", "PUT", "DELETE"],
@@ -36,12 +36,22 @@ app.use(
 //   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
 // });
 
+app.use("/api/user", postRouter);
+
+__dirname = path.resolve();
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+
+app.get("*", (req, res) =>
+  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"))
+);
+
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    // origin: "http://localhost:5173", // Replace with your client's origin 
-    // origin: "http://192.168.100.63:5173", // Replace with your client's origin
-    origin: "https://react-practice-uk4m.onrender.com/", // Replace with your client's origin
+    // origin: "http://localhost:5173", // Replace with your client's origin
+    origin: "http://192.168.100.63:5173", // Replace with your client's origin
+    // origin: "https://react-practice-uk4m.onrender.com/", // Replace with your client's origin
 
     methods: ["GET", "POST"],
   },
@@ -56,10 +66,9 @@ const io = socketIo(server, {
 // mongoose.connect("mongodb://localhost:27017/posts", {});
 
 // mongoose.connect("mongodb://localhost:27017/posts");
-// mongoose.connect(process.env.MONGO_DB_URI_LOCAL);
+mongoose.connect(process.env.MONGO_DB_URI_LOCAL);
 
-mongoose.connect(process.env.MONGO_DB_URI);
-
+// mongoose.connect(process.env.MONGO_DB_URI);
 
 // let lastDataUpdateTime = Date.now();
 
@@ -191,7 +200,5 @@ server.listen(PORT, () => {
 // server.listen(port, () => {
 //   console.log(` Server running on port ${port}`);
 // });
-
-app.use("/api/user", postRouter);
 
 // module.exports = io;

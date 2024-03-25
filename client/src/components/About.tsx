@@ -2,7 +2,7 @@ import TitlePage from "./TitlePage";
 import Posts from "./Posts";
 import AddPost from "./AddPost";
 
-const About: React.FC = () => {
+const About = () => {
   return (
     <>
       <TitlePage title="Posts Page" />

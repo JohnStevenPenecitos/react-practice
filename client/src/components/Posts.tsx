@@ -125,12 +125,16 @@ const Posts = () => {
 
   // const page = hasNextPage;
 
-  
-const page = data && data.pages ? data.pages : [];
+  const page = data && data.pages ? data.pages : [];
 
   console.log(page);
 
   console.log("Data Pages:", data && data.pages);
+
+  console.log(
+    "Data Pages Structure:",
+    data && data.pages && data.pages.map((page) => page.length)
+  );
 
   // useEffect(() => {
   //   console.log("Data:", data);
@@ -492,200 +496,6 @@ const page = data && data.pages ? data.pages : [];
                 </div>
               )}
             </div>
-
-            {/* <div className="w-full p-2 ">
-              {data && data.pages && data.pages.length > 0 ? (
-                data.pages.map((page, pageIndex) => (
-                  <div key={pageIndex}>
-                    {page.map((item, index) => (
-                      <div
-                        key={index}
-                        className="bg-red-200 border-2 border-blue-400 rounded-lg mb-3 flex flex-col"
-                      >
-                        <div className="flex flex-row justify-between p-2">
-                          <div className="flex flex-row gap-2">
-                            {item.postedBy &&
-                            typeof item.postedBy === "object" ? (
-                              <>
-                                {item.postedBy.profilePhoto && (
-                                  <Image src={item.postedBy.profilePhoto} />
-                                )}
-                                <div className="flex flex-col">
-                                  <div className="flex  items-center font-bold">
-                                    {item.postedBy.firstName &&
-                                      `${item.postedBy.firstName} ${item.postedBy.lastName}`}
-                                  </div>
-                                  <span className="text-sm">
-                                    {formatDistanceToNow(
-                                      new Date(item.createdAt),
-                                      {
-                                        addSuffix: true,
-                                      }
-                                    )}
-                                  </span>
-                                </div>
-                              </>
-                            ) : (
-                              <span className="text-sm">
-                                Invalid postedBy data:{" "}
-                                {JSON.stringify(item.postedBy)}
-                              </span>
-                            )}
-                          </div>
-
-                          <FontAwesomeIcon
-                            className="rounded-full p-2 text-2xl  flex justify-center items-center hover:bg-gray-200 cursor-pointer"
-                            icon={faEllipsis}
-                          />
-                        </div>
-                        <div className="p-2">
-                          <Link to={`/app/about/${item._id}`}>{item.name}</Link>
-                        </div>
-                        <div className="flex justify-between">
-                          <div className="flex gap-2 p-2">
-                            {item.likes && item.likes.length > 0 && (
-                              <>
-                                <div>
-                                  <FontAwesomeIcon
-                                    className={`rounded-full p-2 text-xs bg-gray-200 flex justify-center items-center ${
-                                      item.likes.some((like) => like._id)
-                                        ? "text-blue-500"
-                                        : ""
-                                    }`}
-                                    icon={
-                                      item.likes.some((like) => like._id)
-                                        ? faHeartSolid
-                                        : faHeartRegular
-                                    }
-                                  />
-                                </div>
-                                <h1
-                                  className="flex justify-center items-center hover:underline cursor-pointer"
-                                  onClick={() => handleLikedUser(item._id)}
-                                >
-                                  {item.likes.length}
-                                </h1>
-                              </>
-                            )}
-                          </div>
-
-                          <Link to={`/app/about/${item._id}`}>
-                            {item.comments && item.comments.length > 0 && (
-                              <div className="flex gap-1 justify-center items-center p-2 hover:underline">
-                                <h1>{item.comments.length}</h1>
-                                <span>
-                                  {item.comments.length === 1
-                                    ? "comment"
-                                    : "comments"}
-                                </span>
-                              </div>
-                            )}
-                          </Link>
-                        </div>
-                        <div className=" border-t-[1px] border-gray-500">
-                          <div className="flex justify-center items-center p-1">
-                            {item.likes &&
-                            userAuthIdPost &&
-                            item.likes.some(
-                              (like: { _id: string }) =>
-                                like._id === userAuthIdPost
-                            ) ? (
-                              <button
-                                className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center"
-                                onClick={() => handleRemoveLikeClick(item._id)}
-                              >
-                                <div className="flex gap-2 p-1">
-                                  <FontAwesomeIcon
-                                    className={`rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center ${
-                                      item.likes &&
-                                      userAuthIdPost &&
-                                      item.likes.some(
-                                        (like: { _id: string }) =>
-                                          like._id === userAuthIdPost
-                                      )
-                                        ? "text-blue-500"
-                                        : ""
-                                    }`}
-                                    icon={
-                                      item.likes &&
-                                      userAuthIdPost &&
-                                      item.likes.some(
-                                        (like: { _id: string }) =>
-                                          like._id === userAuthIdPost
-                                      )
-                                        ? faHeartSolid
-                                        : faHeartRegular
-                                    }
-                                  />
-                                  <span className="flex justify-center items-center text-blue-500">
-                                    Liked
-                                  </span>
-                                </div>
-                              </button>
-                            ) : (
-                              <button
-                                className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center"
-                                onClick={() => handleAddLikeClick(item._id)}
-                              >
-                                <div className="flex gap-2 p-1">
-                                  <FontAwesomeIcon
-                                    className={`rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center ${
-                                      item.likes &&
-                                      userAuthIdPost &&
-                                      item.likes.some(
-                                        (like: { _id: string }) =>
-                                          like._id === userAuthIdPost
-                                      )
-                                        ? "text-blue-500"
-                                        : ""
-                                    }`}
-                                    icon={
-                                      item.likes &&
-                                      userAuthIdPost &&
-                                      item.likes.some(
-                                        (like: { _id: string }) =>
-                                          like._id === userAuthIdPost
-                                      )
-                                        ? faHeartSolid
-                                        : faHeartRegular
-                                    }
-                                  />
-                                  <span className="flex justify-center items-center">
-                                    Like
-                                  </span>
-                                </div>
-                              </button>
-                            )}
-                            <Link
-                              to={`/app/about/${item._id}`}
-                              className="hover:bg-gray-100 rounded-lg w-full flex justify-center items-center"
-                            >
-                              <div className="flex gap-2 p-1">
-                                <FontAwesomeIcon
-                                  className="rounded-full p-2 text-sm bg-gray-200 flex justify-center items-center"
-                                  icon={faComment}
-                                />
-                                <span className="flex justify-center items-center">
-                                  Comments
-                                </span>
-                              </div>
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <div>No more posts available</div>
-              )}
-              {!hasNextPage && totalItems > 0 && (
-                <div className=" bg-red-200 text-center rounded-lg flex justify-center items-center flex-col p-5">
-                  <img src={noMorePostImage} className="h-40 -mt-10" alt="" />
-                  <span className="font-bold">No more posts available</span>
-                </div>
-              )}
-            </div> */}
           </InfiniteScroll>
         ) : (
           <div>No posts available</div>

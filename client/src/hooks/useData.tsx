@@ -56,6 +56,7 @@ const fetchData = async ({ pageParam = 1 }) => {
     const response = await axios.get(
       `/api/user/dataget?page=${pageParam}&limit=5`
     );
+    console.log("API Response:", response.data); // Log API response data
     return response.data;
   } catch (error) {
     // handle error
@@ -108,58 +109,47 @@ const fetchData = async ({ pageParam = 1 }) => {
 //   },
 // });
 
-const useData = (
-  options?: UseInfiniteQueryOptions<dataItem[], MyError>,
-  onSuccess?: (data: InfiniteData<dataItem[]>) => void,
-  onError?: (error: MyError) => void
-) => {
-  const queryOptions: UseInfiniteQueryOptions<dataItem[], MyError> = {
-    ...options,
-    getNextPageParam: (lastPage, allPages) => {
-      console.log("All Pages:", allPages);
+  const useData = (
+    options?: UseInfiniteQueryOptions<dataItem[], MyError>,
+    onSuccess?: (data: InfiniteData<dataItem[]>) => void,
+    onError?: (error: MyError) => void
+  ) => {
+    const queryOptions: UseInfiniteQueryOptions<dataItem[], MyError> = {
+      ...options,
+      getNextPageParam: (lastPage, allPages) => {
+        console.log("All Pages:", allPages);
 
-      // if (!lastPage || lastPage.length === 0) {
-      //   return undefined;
-      // }
+        if (!lastPage || lastPage.length === 0) {
+          return undefined;
+        }
+        
+        if (lastPage.length < 5) {
+          return undefined;
+        }
 
-      // // Calculate the next page number based on the length of allPages
-      // const nextPageNumber = allPages.length + 1;
+        const nextPageNumber = allPages.length + 1;
 
-      // return nextPageNumber;
+        return nextPageNumber;
+      },
 
-      if (!lastPage || lastPage.length === 0) {
-        return undefined;
-      }
-    
-      // If the last page fetched has less than 5 entries, there's no more data to fetch
-      if (lastPage.length < 5) {
-        return undefined;
-      }
+      onSuccess,
+      onError,
+    };
 
-      const nextPageNumber = allPages.length + 1;
-    
-      // Otherwise, return the next page number
-      return nextPageNumber;
-    },
+    const { data, isLoading, isError, error, hasNextPage, fetchNextPage } =
+      useInfiniteQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
 
-    onSuccess,
-    onError,
+    const hasNextPageBoolean: boolean = hasNextPage || false;
+
+    return {
+      data,
+      isLoading,
+      isError,
+      error,
+      hasNextPage: hasNextPageBoolean,
+      fetchNextPage,
+    };
   };
-
-  const { data, isLoading, isError, error, hasNextPage, fetchNextPage } =
-    useInfiniteQuery<dataItem[], MyError>("posts", fetchData, queryOptions);
-
-  const hasNextPageBoolean: boolean = hasNextPage || false;
-
-  return {
-    data,
-    isLoading,
-    isError,
-    error,
-    hasNextPage: hasNextPageBoolean,
-    fetchNextPage,
-  };
-};
 
 // const useData = (
 //   options?: UseInfiniteQueryOptions<dataItem[], MyError>,
