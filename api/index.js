@@ -19,7 +19,9 @@ app.use(cookieParser());
 app.use(
   cors({
     // origin: ["https://my-react-app-sandy-six.vercel.app"],
-    origin: ["http://192.168.100.63:5173"],
+    // origin: ["http://192.168.100.63:5173"],
+    origin: ["https://react-practice-uk4m.onrender.com/"],
+
     // origin: ["http://localhost:5173"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
@@ -38,7 +40,9 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     // origin: "http://localhost:5173", // Replace with your client's origin 
-    origin: "http://192.168.100.63:5173", // Replace with your client's origin
+    // origin: "http://192.168.100.63:5173", // Replace with your client's origin
+    origin: "https://react-practice-uk4m.onrender.com/", // Replace with your client's origin
+
     methods: ["GET", "POST"],
   },
 });
