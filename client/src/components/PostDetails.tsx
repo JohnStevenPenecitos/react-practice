@@ -19,7 +19,6 @@ import { faComment } from "@fortawesome/free-regular-svg-icons";
 import TitlePage from "./TitlePage";
 import axios from "axios";
 import { useQueryClient } from "react-query";
-import { io } from "socket.io-client";
 import { socket } from "../hooks/useData";
 
 const PostDetails = () => {

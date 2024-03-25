@@ -3,7 +3,7 @@
 import * as React from "react";
 import { cn } from "../../utils/utils";
 import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
-import { Field, ErrorMessage } from "formik";
+import { Field } from "formik";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}

@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "./Image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowCircleLeft,
   faCaretLeft,
   faCaretRight,
   faCircleArrowLeft,
@@ -12,15 +11,13 @@ import girlImage from "/images/jelly-no-messages-1.png";
 import Search from "./Search";
 import {
   ConversationItem,
-  Message,
-  // SeenUser,
   useConversationDetails,
 } from "../hooks/useGetConversations";
 import { useAuthContext } from "./Auth";
 import { motion } from "framer-motion";
-import { Field, FieldArray, Form, Formik, FormikHelpers } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useSendMessage } from "../hooks/useSendMessages";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { useSocketContext } from "./SocketContext";
 import { faFaceSmile, faImages } from "@fortawesome/free-regular-svg-icons";
 import EmojiPicker from "./EmojiPicker";
@@ -35,18 +32,11 @@ function CopyChat() {
   const [selectedMessage, setSelectedMessage] =
     useState<ConversationItem | null>(null);
 
-  const [selectedConversation, setSelectedConversation] =
-    useState<ConversationItem>();
-
   // const socket = io("http://localhost:3000");
 
   const queryClient = useQueryClient();
 
   const [showEmoji, setShowEmoji] = useState(false);
-
-  const [conversation, setConversation] = useState<ConversationItem | null>(
-    null
-  );
 
   const handleEmojiSelect = (
     emoji: string | { native: string }, // Define the type of emoji
@@ -188,21 +178,21 @@ function CopyChat() {
     }
   };
 
-  const handleMessages = async (conversation: ConversationItem) => {
-    // Call markMessageAsSeen for each message in the conversation
-    if (conversation.messages && conversation.messages.length > 0) {
-      for (const message of conversation.messages) {
-        // Check if the receiverId of the message is equal to userAuthId
-        if (message.receiverId === userAuthIdPost) {
-          try {
-            markMessageAsSeen(message._id, message.receiverId);
-          } catch (error) {
-            console.error("Error marking message as seen:", error);
-          }
-        }
-      }
-    }
-  };
+  // const handleMessages = async (conversation: ConversationItem) => {
+  //   // Call markMessageAsSeen for each message in the conversation
+  //   if (conversation.messages && conversation.messages.length > 0) {
+  //     for (const message of conversation.messages) {
+  //       // Check if the receiverId of the message is equal to userAuthId
+  //       if (message.receiverId === userAuthIdPost) {
+  //         try {
+  //           markMessageAsSeen(message._id, message.receiverId);
+  //         } catch (error) {
+  //           console.error("Error marking message as seen:", error);
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 
   // useEffect(() => {
   //   if (conversation) {
@@ -238,24 +228,24 @@ function CopyChat() {
   //   }
   // }, [conversation, selectedMessage, userAuthIdPost]);
 
-  const handleBackToList = () => {
-    setSelectedMessage(null);
-    // setIsContentVisible(false);
-  };
+  // const handleBackToList = () => {
+  //   setSelectedMessage(null);
+  //   // setIsContentVisible(false);
+  // };
 
-  const getAllMessageIds = (conversation: ConversationItem): string[] => {
-    const allMessageIds: string[] = [];
+  // const getAllMessageIds = (conversation: ConversationItem): string[] => {
+  //   const allMessageIds: string[] = [];
 
-    if (!conversation.messages || conversation.messages.length === 0) {
-      return allMessageIds; // No messages in the conversation
-    }
+  //   if (!conversation.messages || conversation.messages.length === 0) {
+  //     return allMessageIds; // No messages in the conversation
+  //   }
 
-    conversation.messages.forEach((message) => {
-      allMessageIds.push(message._id);
-    });
+  //   conversation.messages.forEach((message) => {
+  //     allMessageIds.push(message._id);
+  //   });
 
-    return allMessageIds;
-  };
+  //   return allMessageIds;
+  // };
 
   // const getMessagesWithSeenMessage = (
   //   conversation: ConversationItem
@@ -1108,107 +1098,100 @@ function CopyChat() {
                                 <div className="overflow-auto max-h-[57vh]  scrollbar-thin  scrollbar-thumb-gray-700 scrollbar-track-gray-300 scroll-smooth">
                                   <div className="bg-amber-200 flex flex-col justify-end p-2 min-h-[57vh] ">
                                     {conversation.messages &&
-                                      conversation.messages.map(
-                                        (message, index) => {
-                                          const isSender =
-                                            message.senderId === userAuthIdPost;
-                                          const isReceiver =
-                                            message.receiverId ===
-                                            userAuthIdPost;
+                                      conversation.messages.map((message) => {
+                                        const isSender =
+                                          message.senderId === userAuthIdPost;
+                                        const isReceiver =
+                                          message.receiverId === userAuthIdPost;
 
-                                          if (isSender || isReceiver) {
-                                            return (
-                                              <div
-                                                key={message._id}
-                                                className="p-1"
+                                        if (isSender || isReceiver) {
+                                          return (
+                                            <div
+                                              key={message._id}
+                                              className="p-1"
+                                            >
+                                              <motion.div
+                                                className={`flex ${
+                                                  isSender
+                                                    ? "justify-end"
+                                                    : "justify-start"
+                                                } items-${
+                                                  isSender ? "end" : "start"
+                                                }`}
+                                                initial={{
+                                                  opacity: 0,
+                                                  y: 10,
+                                                }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ duration: 0.5 }}
                                               >
-                                                <motion.div
-                                                  className={`flex ${
-                                                    isSender
-                                                      ? "justify-end"
-                                                      : "justify-start"
-                                                  } items-${
-                                                    isSender ? "end" : "start"
-                                                  }`}
-                                                  initial={{
-                                                    opacity: 0,
-                                                    y: 10,
-                                                  }}
-                                                  animate={{ opacity: 1, y: 0 }}
-                                                  transition={{ duration: 0.5 }}
-                                                >
-                                                  <div className="flex flex-row-reverse justify-center items-center gap-1">
-                                                    <div className="flex flex-col">
-                                                      <div
-                                                        className={`bg-white p-3 flex justify-center items-center ${
-                                                          message.message
-                                                            .length > 20
-                                                            ? "w-48 rounded-3xl"
-                                                            : "rounded-full"
-                                                        }`}
-                                                      >
-                                                        {message.message}
-                                                      </div>
-
-                                                      {message &&
-                                                        message.seenMessage &&
-                                                        conversation.messages &&
-                                                        conversation.messages
-                                                          .length > 0 &&
-                                                        conversation.messages
-                                                          .slice()
-                                                          .reverse()
-                                                          .find(
-                                                            (msg) =>
-                                                              msg.senderId ===
-                                                              userAuthIdPost
-                                                          ) === message && (
-                                                          <div className="flex justify-end">
-                                                            {message.seenMessage.map(
-                                                              (
-                                                                seenUser,
-                                                                index
-                                                              ) =>
-                                                                seenUser.seenBy
-                                                                  ?.profilePhoto && (
-                                                                  <img
-                                                                    key={index}
-                                                                    src={
-                                                                      seenUser
-                                                                        .seenBy
-                                                                        .profilePhoto
-                                                                    }
-                                                                    className="w-5 h-5 rounded-full mt-1"
-                                                                  />
-                                                                )
-                                                            )}
-                                                          </div>
-                                                        )}
+                                                <div className="flex flex-row-reverse justify-center items-center gap-1">
+                                                  <div className="flex flex-col">
+                                                    <div
+                                                      className={`bg-white p-3 flex justify-center items-center ${
+                                                        message.message.length >
+                                                        20
+                                                          ? "w-48 rounded-3xl"
+                                                          : "rounded-full"
+                                                      }`}
+                                                    >
+                                                      {message.message}
                                                     </div>
 
-                                                    {!isSender &&
-                                                      conversation.participants && (
-                                                        <Image
-                                                          key={`receiver_${message._id}`}
-                                                          src={
-                                                            conversation.participants.find(
-                                                              (p) =>
-                                                                p._id ===
-                                                                message.senderId
-                                                            )?.profilePhoto ||
-                                                            ""
-                                                          }
-                                                        />
+                                                    {message &&
+                                                      message.seenMessage &&
+                                                      conversation.messages &&
+                                                      conversation.messages
+                                                        .length > 0 &&
+                                                      conversation.messages
+                                                        .slice()
+                                                        .reverse()
+                                                        .find(
+                                                          (msg) =>
+                                                            msg.senderId ===
+                                                            userAuthIdPost
+                                                        ) === message && (
+                                                        <div className="flex justify-end">
+                                                          {message.seenMessage.map(
+                                                            (seenUser, index) =>
+                                                              seenUser.seenBy
+                                                                ?.profilePhoto && (
+                                                                <img
+                                                                  key={index}
+                                                                  src={
+                                                                    seenUser
+                                                                      .seenBy
+                                                                      .profilePhoto
+                                                                  }
+                                                                  className="w-5 h-5 rounded-full mt-1"
+                                                                />
+                                                              )
+                                                          )}
+                                                        </div>
                                                       )}
                                                   </div>
-                                                </motion.div>
-                                              </div>
-                                            );
-                                          } else {
-                                            return null;
-                                          }
+
+                                                  {!isSender &&
+                                                    conversation.participants && (
+                                                      <Image
+                                                        key={`receiver_${message._id}`}
+                                                        src={
+                                                          conversation.participants.find(
+                                                            (p) =>
+                                                              p._id ===
+                                                              message.senderId
+                                                          )?.profilePhoto || ""
+                                                        }
+                                                      />
+                                                    )}
+                                                </div>
+                                              </motion.div>
+                                            </div>
+                                          );
+                                        } else {
+                                          return null;
                                         }
-                                      )}
+                                      })}
                                     <div ref={messagesEndRef}></div>
                                   </div>
                                 </div>

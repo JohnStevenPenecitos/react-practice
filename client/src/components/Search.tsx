@@ -22,7 +22,6 @@ function Search({ setShowSearch }: SearchProps) {
 
   const { authUser } = useAuthContext();
 
-  const userAuthId = authUser?._id;
 
   const handleSearch = async (query: string) => {
     try {

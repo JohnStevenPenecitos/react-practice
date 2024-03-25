@@ -1,6 +1,3 @@
-import { useSocketContext } from "./SocketContext";
-import { useAuthContext } from "./Auth";
-import Chat from "./Chat";
 import CopyChat from "./CopyChat";
 import ResponsiveChat from "./ResponsiveChat";
 

@@ -3,8 +3,6 @@ import Image from "./Image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowCircleLeft,
-  faCaretLeft,
-  faCaretRight,
   faCircleArrowLeft,
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
@@ -31,18 +29,13 @@ function ResponsiveChat() {
   const [selectedMessage, setSelectedMessage] =
     useState<ConversationItem | null>(null);
 
-  const [selectedConversation, setSelectedConversation] =
-    useState<ConversationItem>();
+  const [selectedConversation] = useState<ConversationItem>();
 
   // const socket = io("http://localhost:3000");
 
   const queryClient = useQueryClient();
 
   const [showEmoji, setShowEmoji] = useState(false);
-
-  const [conversation, setConversation] = useState<ConversationItem | null>(
-    null
-  );
 
   const handleEmojiSelect = (
     emoji: string | { native: string }, // Define the type of emoji
@@ -77,9 +70,9 @@ function ResponsiveChat() {
 
   const [showSearch, setShowSearch] = useState(false);
 
-  const toggleContentVisibility = () => {
-    setIsContentVisible((prev) => !prev);
-  };
+  // const toggleContentVisibility = () => {
+  //   setIsContentVisible((prev) => !prev);
+  // };
 
   const { mutate: sendMessage } = useSendMessage({
     senderId: authUser ? authUser._id : null,
@@ -173,19 +166,19 @@ function ResponsiveChat() {
     // setIsContentVisible(false);
   };
 
-  const getAllMessageIds = (conversation: ConversationItem): string[] => {
-    const allMessageIds: string[] = [];
+  // const getAllMessageIds = (conversation: ConversationItem): string[] => {
+  //   const allMessageIds: string[] = [];
 
-    if (!conversation.messages || conversation.messages.length === 0) {
-      return allMessageIds; // No messages in the conversation
-    }
+  //   if (!conversation.messages || conversation.messages.length === 0) {
+  //     return allMessageIds; // No messages in the conversation
+  //   }
 
-    conversation.messages.forEach((message) => {
-      allMessageIds.push(message._id);
-    });
+  //   conversation.messages.forEach((message) => {
+  //     allMessageIds.push(message._id);
+  //   });
 
-    return allMessageIds;
-  };
+  //   return allMessageIds;
+  // };
 
   const getEmptySeenMessagesCount = (
     conversation: ConversationItem
@@ -982,160 +975,162 @@ function ResponsiveChat() {
                               <div className="overflow-auto max-h-[53vh]">
                                 <div className="min-h-[53vh] bg-amber-200 flex flex-col justify-end p-2">
                                   {conversation.messages &&
-                                    conversation.messages.map(
-                                      (message, index) => {
-                                        const isSender =
-                                          message.senderId === userAuthIdPost;
-                                        const isReceiver =
-                                          message.receiverId === userAuthIdPost;
+                                    conversation.messages.map((message) => {
+                                      const isSender =
+                                        message.senderId === userAuthIdPost;
+                                      const isReceiver =
+                                        message.receiverId === userAuthIdPost;
 
-                                        if (isSender || isReceiver) {
-                                          return (
-                                            <div
-                                              key={message._id}
-                                              className="p-1"
+                                      if (isSender || isReceiver) {
+                                        return (
+                                          <div
+                                            key={message._id}
+                                            className="p-1"
+                                          >
+                                            <motion.div
+                                              className={`flex ${
+                                                isSender
+                                                  ? "justify-end"
+                                                  : "justify-start"
+                                              } items-${
+                                                isSender ? "end" : "start"
+                                              }`}
+                                              initial={{ opacity: 0, y: 10 }}
+                                              animate={{ opacity: 1, y: 0 }}
+                                              transition={{ duration: 0.5 }}
                                             >
-                                              <motion.div
-                                                className={`flex ${
-                                                  isSender
-                                                    ? "justify-end"
-                                                    : "justify-start"
-                                                } items-${
-                                                  isSender ? "end" : "start"
-                                                }`}
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.5 }}
-                                              >
-                                                <div className="flex flex-row-reverse justify-center items-center gap-1">
-                                                  <div className="flex flex-col">
-                                                    <div
-                                                      className={`bg-white p-3 flex justify-center items-center ${
-                                                        message.message.length >
-                                                        20
-                                                          ? "w-48 rounded-3xl"
-                                                          : "rounded-full"
-                                                      }`}
-                                                    >
-                                                      {message.message}
-                                                    </div>
-
-                                                    {message &&
-                                                      message.seenMessage &&
-                                                      conversation.messages &&
-                                                      conversation.messages
-                                                        .length > 0 &&
-                                                      conversation.messages
-                                                        .slice()
-                                                        .reverse()
-                                                        .find(
-                                                          (msg) =>
-                                                            msg.senderId ===
-                                                            userAuthIdPost
-                                                        ) === message && (
-                                                        <div className="flex justify-end">
-                                                          {message.seenMessage.map(
-                                                            (seenUser, index) =>
-                                                              seenUser.seenBy
-                                                                ?.profilePhoto && (
-                                                                <img
-                                                                  key={index}
-                                                                  src={
-                                                                    seenUser
-                                                                      .seenBy
-                                                                      .profilePhoto
-                                                                  }
-                                                                  className="w-5 h-5 rounded-full mt-1"
-                                                                />
-                                                              )
-                                                          )}
-                                                        </div>
-                                                      )}
+                                              <div className="flex flex-row-reverse justify-center items-center gap-1">
+                                                <div className="flex flex-col">
+                                                  <div
+                                                    className={`bg-white p-3 flex justify-center items-center ${
+                                                      message.message.length >
+                                                      20
+                                                        ? "w-48 rounded-3xl"
+                                                        : "rounded-full"
+                                                    }`}
+                                                  >
+                                                    {message.message}
                                                   </div>
 
-                                                  {!isSender &&
-                                                    conversation.participants && (
-                                                      <Image
-                                                        key={`receiver_${message._id}`}
-                                                        src={
-                                                          conversation.participants.find(
-                                                            (p) =>
-                                                              p._id ===
-                                                              message.senderId
-                                                          )?.profilePhoto || ""
-                                                        }
-                                                      />
+                                                  {message &&
+                                                    message.seenMessage &&
+                                                    conversation.messages &&
+                                                    conversation.messages
+                                                      .length > 0 &&
+                                                    conversation.messages
+                                                      .slice()
+                                                      .reverse()
+                                                      .find(
+                                                        (msg) =>
+                                                          msg.senderId ===
+                                                          userAuthIdPost
+                                                      ) === message && (
+                                                      <div className="flex justify-end">
+                                                        {message.seenMessage.map(
+                                                          (seenUser, index) =>
+                                                            seenUser.seenBy
+                                                              ?.profilePhoto && (
+                                                              <img
+                                                                key={index}
+                                                                src={
+                                                                  seenUser
+                                                                    .seenBy
+                                                                    .profilePhoto
+                                                                }
+                                                                className="w-5 h-5 rounded-full mt-1"
+                                                              />
+                                                            )
+                                                        )}
+                                                      </div>
                                                     )}
                                                 </div>
-                                                <div ref={messagesEndRef}></div>
-                                              </motion.div>
-                                            </div>
-                                          );
-                                        } else {
-                                          return null;
-                                        }
+
+                                                {!isSender &&
+                                                  conversation.participants && (
+                                                    <Image
+                                                      key={`receiver_${message._id}`}
+                                                      src={
+                                                        conversation.participants.find(
+                                                          (p) =>
+                                                            p._id ===
+                                                            message.senderId
+                                                        )?.profilePhoto || ""
+                                                      }
+                                                    />
+                                                  )}
+                                              </div>
+                                              <div ref={messagesEndRef}></div>
+                                            </motion.div>
+                                          </div>
+                                        );
+                                      } else {
+                                        return null;
                                       }
-                                    )}
+                                    })}
                                 </div>
                               </div>
 
-                              <div className="bg-gray-700 flex justify-center items-center gap-1 p-3">
-                                <FontAwesomeIcon
-                                  className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-xl bg-gray-200"
-                                  icon={faImages}
-                                />
-
+                              <div className="bg-gray-700 flex items-center gap-1 p-3 ">
+                                <div className="flex gap-2">
+                                  <FontAwesomeIcon
+                                    className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-xl bg-gray-200"
+                                    icon={faImages}
+                                  />
+                                </div>
+                                <div className="w-full ">
+                                  <Formik
+                                    initialValues={{
+                                      message: "",
+                                      receiverIds: conversation.participants
+                                        ? conversation.participants
+                                            .filter(
+                                              (participant) =>
+                                                participant._id !==
+                                                userAuthIdPost
+                                            )
+                                            .map(
+                                              (participant) => participant._id
+                                            )
+                                        : [],
+                                    }}
+                                    onSubmit={handleSendMessage}
+                                  >
+                                    {({ values, setFieldValue }) => (
+                                      <Form>
+                                        <div className="w-full flex ">
+                                          <Field
+                                            id="message"
+                                            name="message"
+                                            className="bg-gray-300 outline-none rounded-full p-2 pl-3 w-full"
+                                            placeholder="Write your message"
+                                            onClick={() => {
+                                              setShowEmoji(false);
+                                              handleMessageClick(conversation);
+                                            }}
+                                          />
+                                          {showEmoji && (
+                                            <div className="absolute top-[23%] right-10">
+                                              <EmojiPicker
+                                                onEmojiSelect={(emoji) =>
+                                                  handleEmojiSelect(
+                                                    emoji,
+                                                    values,
+                                                    setFieldValue
+                                                  )
+                                                }
+                                              />
+                                            </div>
+                                          )}
+                                        </div>
+                                      </Form>
+                                    )}
+                                  </Formik>
+                                </div>
                                 <FontAwesomeIcon
                                   className="hover:bg-gray-400 rounded-full cursor-pointer p-2 text-gray-800 text-xl bg-gray-200"
                                   icon={faFaceSmile}
                                   onClick={() => setShowEmoji(!showEmoji)} // Toggle the state variable on click
                                 />
-
-                                <Formik
-                                  initialValues={{
-                                    message: "",
-                                    receiverIds: conversation.participants
-                                      ? conversation.participants
-                                          .filter(
-                                            (participant) =>
-                                              participant._id !== userAuthIdPost
-                                          )
-                                          .map((participant) => participant._id)
-                                      : [],
-                                  }}
-                                  onSubmit={handleSendMessage}
-                                  // onClick={() => handleMessageClick(conversation)}
-                                >
-                                  {({ values, setFieldValue }) => (
-                                    <Form>
-                                      <div>
-                                        <Field
-                                          id="message"
-                                          name="message"
-                                          className="bg-gray-200 outline-none w-full rounded-full p-1 pl-3"
-                                          placeholder="Write your message"
-                                          onClick={() => {
-                                            setShowEmoji(false);
-                                            handleMessageClick(conversation);
-                                          }}
-                                        />
-                                      </div>
-                                      {showEmoji && (
-                                        <div className="absolute top-[27%] right-14">
-                                          <EmojiPicker
-                                            onEmojiSelect={(emoji) =>
-                                              handleEmojiSelect(
-                                                emoji,
-                                                values,
-                                                setFieldValue
-                                              )
-                                            }
-                                          />
-                                        </div>
-                                      )}
-                                    </Form>
-                                  )}
-                                </Formik>
                               </div>
                             </div>
                           </div>

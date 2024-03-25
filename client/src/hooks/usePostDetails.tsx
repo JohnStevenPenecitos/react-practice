@@ -5,7 +5,6 @@ import {
   useQueryClient,
   useMutation,
 } from "react-query";
-import { io } from "socket.io-client";
 import { socket } from "./useData";
 // import { useAuthContext } from "../components/Auth";
 

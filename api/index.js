@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const http = require("http");
-// const { Server } = require("socket.io");
+const path = require("path");
 const socketIo = require("socket.io");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
@@ -12,24 +12,42 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3001;
 
+// const __dirname = path.resolve();
+
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
 app.use(cookieParser());
 app.use(
   cors({
     // origin: ["https://my-react-app-sandy-six.vercel.app"],
+    origin: ["http://192.168.100.63:5173"],
     // origin: ["http://localhost:5173"],
-    // methods: ["POST", "GET", "PUT", "DELETE"],
-    // credentials: true,
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true,
   })
 );
+
+// app.use(express.static(path.join(__dirname, "/client/dist")));
+
+// app.use(express.static(path.join(__dirname, "../client/dist")));
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
+// });
 
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5173", // Replace with your client's origin
+    // origin: "http://localhost:5173", // Replace with your client's origin 
+    origin: "http://192.168.100.63:5173", // Replace with your client's origin
     methods: ["GET", "POST"],
   },
 });
+
+// app.use(express.static(path.join(__dirname, "/client/dist")));
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+// });
 
 // mongoose.connect("mongodb://localhost:27017/posts", {});
 

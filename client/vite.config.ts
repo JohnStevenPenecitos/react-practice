@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from "path"
+// import path from "path"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,6 +8,8 @@ export default defineConfig({
     proxy: {
       '/api': {
         target:'http://localhost:3000',
+        // target:'http://192.168.100.63:5173',
+
         // target:'https://react-practice-zeta-rust.vercel.app',
         secure: false,
       },
@@ -16,7 +18,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      // "@": path.resolve(__dirname, "./src"),
     },
   },
 })
