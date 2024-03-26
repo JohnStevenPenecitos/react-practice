@@ -1,9 +1,11 @@
-<p align="center">Social Media Application</p>
+## <p align="center">Social Media Application</p>
 
-## General Information
+## <p align="center">General Information</p>
 This application is made with React Typescript with SocketIO for real time update of data. This is also a personal project for practicing 
-react and exploring MERN stack.
+react and exploring MERN stack with JWT Token generation.
 
+## <p align="center">Dependencies</p>
+## ---------------------------------
 
 ## Installation of MONGODB
 
@@ -45,4 +47,26 @@ For Backend
 For Frontend
 - npm install socket.io-client
 - url must be backend
+## ---------------------------------
+
+## Deployment
+## ---------------------------------
+## Render
+- create an account 
+- click new services and choose Web services
+- connect github
+- choose for the repository to deploy
+- setup ENV values
+
+## Docker
+
+## ---------------------------------
+
+## Development Timeline
+
+<ul>
+<li>February 25, 2024</li> | Start of development - Installation of dependencies
+<li>February 26, 2024 - March 24, 2024</li> | Development stage - Initial version of the application
+<li>March 25, 2024</li> | Testing and Deployment - Testing and deploying to local network
+</ul>
 
