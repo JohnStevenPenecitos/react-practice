@@ -4,6 +4,7 @@
 This application is made with React Typescript with SocketIO for real time update of data. This is also a personal project for practicing 
 react and exploring MERN stack with JWT Token generation.
 
+## 
 ## <p align="center">Dependencies</p>
 
 ## Installation of Mongo DB
