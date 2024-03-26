@@ -5,9 +5,8 @@ This application is made with React Typescript with SocketIO for real time updat
 react and exploring MERN stack with JWT Token generation.
 
 ## <p align="center">Dependencies</p>
-## ---------------------------------
 
-## Installation of MONGODB
+## Installation of Mongo DB
 
 - Create account in the mongodb site
 - Create a database
@@ -47,20 +46,19 @@ For Backend
 For Frontend
 - npm install socket.io-client
 - url must be backend
-## ---------------------------------
 
-## Deployment
-## ---------------------------------
+
+## <p align="center"> Deployment </p>
 ## Render
-- create an account 
-- click new services and choose Web services
-- connect github
-- choose for the repository to deploy
-- setup ENV values
+- Create an account 
+- Click new services and choose Web services
+- Connect github
+- Choose for the repository to deploy
+- Setup ENV values
 
 ## Docker
 
-## ---------------------------------
+
 
 ## Development Timeline
 
