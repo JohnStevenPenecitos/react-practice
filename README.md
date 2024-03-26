@@ -47,7 +47,7 @@ For Backend
 For Frontend
 - npm install socket.io-client
 - url must be backend
-
+## 
 
 ## <p align="center"> Deployment </p>
 ## Render
@@ -60,8 +60,8 @@ For Frontend
 ## Docker
 
 
-
-## Development Timeline
+## 
+## <p align="center">Development Timeline</p>
 
 <ul>
 <li>February 25, 2024</li> | Start of development - Installation of dependencies
