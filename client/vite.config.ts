@@ -7,9 +7,9 @@ export default defineConfig({
   server:{
     proxy: {
       '/api': {
-        // target:'http://localhost:3000',
+        target:'http://localhost:3000',
 
-        target:'https://react-practice-uk4m.onrender.com',
+        // target:'https://react-practice-uk4m.onrender.com',
         
         // target:'http://192.168.100.63:5173',
 
