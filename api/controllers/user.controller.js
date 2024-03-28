@@ -2,48 +2,6 @@ const UserModel = require("../model/UserModel.js");
 const bcrypt = require("bcrypt");
 const generateTokenAndSetCookie = require("../utils/generateToken.js");
 
-// const userSignUp = async (req, res) => {
-//   try {
-//     const { firstName, lastName, userName, confirmpassword, password, age } =
-//       req.body;
-
-//     // if (password !== confirmpassword) {
-//     //   return res.status(400).json({ error: "Password do not match!" });
-//     // }
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-
-//     const defaultPicApi = `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`;
-
-//     const user = await UserModel.findOne({ userName });
-
-//     if (user) {
-//       return res.status(400).json({ error: "Username already exists!" });
-//     }
-
-//     const newUser = new UserModel({
-//       firstName,
-//       lastName,
-//       userName,
-//       password: hashedPassword,
-//       age,
-//       profilePhoto: defaultPicApi,
-//     });
-
-//     if (newUser) {
-//       generateTokenAndSetCookie(newUser._id, res);
-//       await newUser.save();
-
-//       // Respond with a success message
-//       res.status(201).json({ message: "Sign up successfully!" });
-//     }
-//   } catch (error) {
-//     // next(error);
-//     console.log("Error in signup controller", error.message);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// };
-
 const userSignUp = async (req, res) => {
   try {
     const { firstName, lastName, userName, confirmpassword, password, age } =
@@ -101,9 +59,6 @@ const userSignUp = async (req, res) => {
         user: userData,
       });
     }
-
-    // Respond with a success message
-    // return res.status(201).json({ message: "Sign up successfully!" });
   } catch (error) {
     console.log("Error in signup controller", error.message);
     return res.status(500).json({ error: "Internal Server Error" });

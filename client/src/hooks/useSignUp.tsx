@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
 import * as yup from "yup";
-import { useAuthContext } from "../components/Auth";
+import { useAuthContext } from "../authentication/Auth";
 
 // interface FormValues {
 //   firstName: string;
@@ -40,25 +40,6 @@ const useSignUp = () => {
 
       const response = await axios.post("/api/user/signup", formData);
 
-      // if (response.status === 201) {
-      //   toast.success(response.data.message);
-
-      //   const data = response.data;
-
-      //   localStorage.setItem("chat-user", JSON.stringify(data));
-      //   setAuthUser(data);
-
-      //   return data;
-
-      // } else {
-      //   if (response.data.error) {
-      //     toast.error(response.data.error);
-      //   } else {
-      //     toast.error("Failed to create an account");
-      //   }
-
-      //   throw new Error("Failed to create an account");
-      // }
       if (response.status === 201) {
         toast.success(response.data.message);
 

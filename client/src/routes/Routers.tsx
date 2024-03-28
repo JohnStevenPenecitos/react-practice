@@ -1,17 +1,16 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Layout from "../Layout";
-import Home from "./Home";
-import About from "./About";
-import Products from "./Products";
-import Featured from "./Featured";
-import New from "./New";
-import Users from "./Users";
-import UserDetails from "./UserDetails";
-import AdminDetails from "./AdminDetails";
-import PostDetails from "./PostDetails";
-// import Chat from "./Chat";
-import MobileChat from "./MobileChat";
-// import SignUp from "./SignUp";
+import Layout from "../layout/Layout";
+import Home from "../pages/Home";
+import About from "../pages/About";
+import Products from "../pages/Products";
+import Featured from "../components/Featured";
+import New from "../components/New";
+import Users from "../pages/Users";
+import UserDetails from "../components/UserDetails";
+import AdminDetails from "../components/AdminDetails";
+import PostDetails from "../components/PostDetails";
+import MobileChat from "../pages/MobileChat";
+
 const Routers = () => {
   return (
     <Layout>

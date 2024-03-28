@@ -1,6 +1,6 @@
 
 import { NavLink, Outlet } from "react-router-dom";
-import TitlePage from "./TitlePage";
+import TitlePage from "../components/TitlePage";
 
 const navigation = [
   { name: "Featured", href: "featured" },

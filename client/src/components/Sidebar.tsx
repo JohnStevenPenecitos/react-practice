@@ -1,4 +1,4 @@
-import { useAuthContext } from "./Auth";
+import { useAuthContext } from "../authentication/Auth";
 import Image from "./Image";
 import { NavLink } from "react-router-dom";
 // import { motion } from "framer-motion";

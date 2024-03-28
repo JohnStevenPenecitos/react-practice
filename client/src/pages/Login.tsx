@@ -1,11 +1,11 @@
 // import { useState } from "react";
 // import { useAuth } from "./Auth";
-import TitlePage from "./TitlePage";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { cn } from "./../utils/utils";
+import TitlePage from "../components/TitlePage";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { cn } from "../utils/utils";
 // import Input from "./Input";
-import Background from "./Background";
+import Background from "../components/Background";
 import { Form, Formik, FormikHelpers } from "formik";
 import useLogin from "../hooks/useLogin";
 import { Link } from "react-router-dom";

@@ -12,8 +12,6 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3001;
 
-// const __dirname = path.resolve();
-
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
 app.use(cookieParser());
 app.use(
@@ -21,20 +19,11 @@ app.use(
     // origin: ["https://my-react-app-sandy-six.vercel.app"],
     // origin: ["http://192.168.100.63:5173"],
     origin: ["https://react-practice-uk4m.onrender.com"],
-
     // origin: ["http://localhost:5173"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
   })
 );
-
-// app.use(express.static(path.join(__dirname, "/client/dist")));
-
-// app.use(express.static(path.join(__dirname, "../client/dist")));
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
-// });
 
 app.use("/api/user", postRouter);
 
@@ -57,18 +46,9 @@ const io = socketIo(server, {
   },
 });
 
-// app.use(express.static(path.join(__dirname, "/client/dist")));
+// mongoose.connect(process.env.MONGO_DB_URI_LOCAL);
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-// });
-
-// mongoose.connect("mongodb://localhost:27017/posts", {});
-
-// mongoose.connect("mongodb://localhost:27017/posts");
 mongoose.connect(process.env.MONGO_DB_URI);
-
-// mongoose.connect(process.env.MONGO_DB_URI);
 
 // let lastDataUpdateTime = Date.now();
 
@@ -88,23 +68,6 @@ io.on("connection", (socket) => {
   io.emit("getOnlineUsers", onlineUsers);
 
   console.log(userId);
-
-  // Emit the "dataChanged" event only when there are actual changes
-  // const emitDataChanged = () => {
-  //   const currentTime = Date.now();
-
-  //   // Simulate some condition that triggers a change (e.g., every 10 seconds)
-  //   if (currentTime - lastDataUpdateTime > 10000) {
-  //     lastDataUpdateTime = currentTime;
-
-  //     // Emit the "dataChanged" event to all connected clients
-  //     io.emit("dataChanged");
-  //   }
-  // };
-
-  // const dataChangedInterval = setInterval(() => {
-  //   emitDataChanged();
-  // }, 1000); // 5 seconds in milliseconds
 
   socket.on("newPost", (data) => {
     console.log("Received new post:", data);
@@ -192,13 +155,3 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-// app.listen(3000, () => {
-//   console.log("Server is running on port 3000!");
-// });
-
-// server.listen(port, () => {
-//   console.log(` Server running on port ${port}`);
-// });
-
-// module.exports = io;

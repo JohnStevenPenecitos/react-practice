@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import toast from "react-hot-toast";
-import { useAuthContext } from "../components/Auth";
+import { useAuthContext } from "../authentication/Auth";
 import * as yup from "yup";
 import axios from "axios";
 import { useMutation } from "react-query";

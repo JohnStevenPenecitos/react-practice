@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { User, useSendInitialMessage } from "../hooks/useSendMessages";
-import { useAuthContext } from "./Auth";
+import { useAuthContext } from "../authentication/Auth";
 
 interface SearchProps {
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;

@@ -12,12 +12,12 @@ import {
   ConversationItem,
   useConversationDetails,
 } from "../hooks/useGetConversations";
-import { useAuthContext } from "./Auth";
+import { useAuthContext } from "../authentication/Auth";
 import { motion } from "framer-motion";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useSendMessage } from "../hooks/useSendMessages";
 import { formatDistanceToNow } from "date-fns";
-import { useSocketContext } from "./SocketContext";
+import { useSocketContext } from "../authentication/SocketContext";
 import { faFaceSmile, faImages } from "@fortawesome/free-regular-svg-icons";
 import EmojiPicker from "./EmojiPicker";
 import axios from "axios";
@@ -30,8 +30,6 @@ function ResponsiveChat() {
     useState<ConversationItem | null>(null);
 
   const [selectedConversation] = useState<ConversationItem>();
-
-  // const socket = io("http://localhost:3000");
 
   const queryClient = useQueryClient();
 

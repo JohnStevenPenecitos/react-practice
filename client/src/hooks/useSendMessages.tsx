@@ -6,14 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from "react-query";
-
-import { io } from "socket.io-client";
-
-// const socket = io("http://localhost:3000");
-
-const socket = io("https://react-practice-uk4m.onrender.com");
-
-
+import { socket } from "./useData";
 export interface User {
   _id: string;
   firstName: string;

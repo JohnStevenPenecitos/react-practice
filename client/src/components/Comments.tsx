@@ -3,14 +3,14 @@ import { Comment, useCommentDetails } from "../hooks/usePostDetails";
 import { formatDistanceToNow } from "date-fns";
 import Image from "./Image";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import { useAuthContext } from "./Auth";
+import { useAuthContext } from "../authentication/Auth";
 import axios from "axios";
 import { useState } from "react";
-import { io } from "socket.io-client";
 import { useQueryClient } from "react-query";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
+import { socket } from "../hooks/useData";
 
 const Comments = () => {
   const { postId } = useParams<{ postId?: string }>();
@@ -20,11 +20,6 @@ const Comments = () => {
   const userAuthId = authUser?._id;
 
   const userAuthIdPost = authUser?._id?.toString();
-
-  // const socket = io("http://localhost:3000");
-
-  const socket = io("https://react-practice-uk4m.onrender.com"); 
-
 
   const queryClient = useQueryClient();
 

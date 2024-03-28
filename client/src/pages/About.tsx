@@ -1,6 +1,6 @@
-import TitlePage from "./TitlePage";
-import Posts from "./Posts";
-import AddPost from "./AddPost";
+import TitlePage from "../components/TitlePage";
+import Posts from "../components/Posts";
+import AddPost from "../components/AddPost";
 
 const About = () => {
   return (

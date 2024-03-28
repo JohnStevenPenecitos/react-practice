@@ -1,13 +1,9 @@
 //this is the layout
-import Navbar from "./components/Navbar";
-// import FooterSys from "./components/FooterSys";
+import Navbar from "../components/Navbar";
 import { ReactNode, useEffect, useState } from "react";
-import Sidebar from "./components/Sidebar";
-import RightSidebar from "./components/RightSidebar";
+import Sidebar from "../components/Sidebar";
+import RightSidebar from "../components/RightSidebar";
 import { useLocation } from "react-router-dom";
-// import { BackgroundGradientAnimation } from "./components/ui/background-gradient-animation";
-// import Background from "./components/Background";
-
 interface Props {
   children: ReactNode;
 }

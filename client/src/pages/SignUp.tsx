@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { cn } from "./../utils/utils";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { cn } from "../utils/utils";
 // import {
 //   IconBrandGithub,
 //   IconBrandGoogle,
@@ -10,7 +10,7 @@ import { cn } from "./../utils/utils";
 // } from "@tabler/icons-react";
 import useSignUp from "../hooks/useSignUp";
 import { Form, Formik, FormikHelpers } from "formik";
-import TitlePage from "./TitlePage";
+import TitlePage from "../components/TitlePage";
 // import * as Yup from "yup";
 
 // const validationSchema = Yup.object().shape({

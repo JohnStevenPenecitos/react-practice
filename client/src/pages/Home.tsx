@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import Alert from "./Alert";
-import Button from "./Button";
+import Alert from "../components/Alert";
+import Button from "../components/Button";
 import { useEffect, useState } from "react";
 
 interface Props {

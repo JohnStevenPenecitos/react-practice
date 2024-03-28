@@ -5,7 +5,7 @@ import usePostDetails, {
 } from "../hooks/usePostDetails";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import Comments from "./Comments";
-import { useAuthContext } from "./Auth";
+import { useAuthContext } from "../authentication/Auth";
 import Image from "./Image";
 import { formatDistanceToNow } from "date-fns";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,8 +35,6 @@ const PostDetails = () => {
   const userAuthIdPost = authUser?._id?.toString();
 
   const queryClient = useQueryClient();
-
-  // const socket = io("http://localhost:3000");
 
   const handleLikeClick = async (postId: string) => {
     try {

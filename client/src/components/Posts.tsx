@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Modal from "./Modal";
 import Button from "./Button";
 import { useEffect, useState } from "react";
-import useData, { useUpdatePostData } from "../hooks/useData";
+import useData, { socket, useUpdatePostData } from "../hooks/useData";
 import Image from "./Image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,8 +16,7 @@ import {
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { formatDistanceToNow } from "date-fns";
 import axios from "axios";
-import { useAuthContext } from "./Auth";
-import { io } from "socket.io-client";
+import { useAuthContext } from "../authentication/Auth";
 import { useQueryClient } from "react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import noMorePostImage from "/images/jelly-character-cant-find-the-right-page.png";
@@ -37,11 +36,6 @@ const Posts = () => {
   const userAuthId = authUser?._id;
 
   const userAuthIdPost = authUser?._id?.toString();
-
-  // const socket = io("http://localhost:3000");
-
-  const socket = io("https://react-practice-uk4m.onrender.com");
-
 
   const [likedUsers, setLikedUsers] = useState<any[]>([]);
 

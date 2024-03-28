@@ -1,5 +1,5 @@
-import CopyChat from "./CopyChat";
-import ResponsiveChat from "./ResponsiveChat";
+import CopyChat from "../components/CopyChat";
+import ResponsiveChat from "../components/ResponsiveChat";
 
 const Messages = () => {
   return (

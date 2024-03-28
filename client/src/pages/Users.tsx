@@ -1,10 +1,10 @@
 // import { Outlet } from "react-router-dom";
-import TitlePage from "./TitlePage";
+import TitlePage from "../components/TitlePage";
 import {
   TextRevealCard,
   TextRevealCardDescription,
   TextRevealCardTitle,
-} from "./ui/text-reveal-card";
+} from "../components/ui/text-reveal-card";
 
 const Users = () => {
   return (

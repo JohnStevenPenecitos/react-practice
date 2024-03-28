@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { BurgerSwipe } from "react-icons-animated";
 import useLogout from "../hooks/useLogout";
-import { useAuthContext } from "./Auth";
+import { useAuthContext } from "../authentication/Auth";
 import Image from "./Image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

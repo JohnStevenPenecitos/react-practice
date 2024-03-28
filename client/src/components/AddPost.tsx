@@ -4,7 +4,7 @@ import { useAddDataPost } from "../hooks/useData";
 import { useState } from "react";
 import Modal from "./Modal";
 import Button from "./Button";
-import { useAuthContext } from "./Auth";
+import { useAuthContext } from "../authentication/Auth";
 
 function AddPost() {
   const [alertVisible, setAlertVisibility] = useState(false);
